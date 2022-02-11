@@ -18,7 +18,7 @@ class CosmeticsProductComment extends Migration
             $table->bigInteger('parent_id');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('product_id');
-            $table->string('content');
+            $table->text('content');
             $table->timestamps();
         });
     }
