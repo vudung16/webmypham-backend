@@ -20,6 +20,11 @@ class CreateCosmeticsProductTable extends Migration
             $table->string('product_image');
             $table->double('product_price');
             $table->integer('product_discount')->nullable();
+            $table->integer('product_width');
+            $table->integer('product_height');
+            $table->integer('product_length');
+            $table->integer('product_weight');
+            $table->integer('product_selling');
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('brand_id');
             $table->timestamps();
