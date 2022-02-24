@@ -317,6 +317,9 @@ class WebviewController extends Controller
 
     public function listVoucher() {
         $voucher = Voucher::all();
+        foreach($voucher as $vc) {
+            $vc->image = env('APP_URL'). '/img/voucher/' . $vc->image;
+        }
         return $this->responseSuccess($voucher);
     }
 }
