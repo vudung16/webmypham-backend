@@ -17,6 +17,7 @@ class CreateCosmeticsProductTable extends Migration
             $table->bigIncrements('product_id');
             $table->string('product_name');
             $table->string('product_description');
+            $table->longText('product_content');
             $table->string('product_image');
             $table->double('product_price');
             $table->integer('product_discount')->nullable();
