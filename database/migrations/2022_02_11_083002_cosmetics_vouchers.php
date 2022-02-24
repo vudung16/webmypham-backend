@@ -18,35 +18,33 @@ class CosmeticsVouchers extends Migration
             
             // The voucher code
             $table->string('code')->nullable();
-        
-            // The human readable voucher code name
-            $table->string('name');
+
+            $table->string('image')->nullable();
+
+            $table->text('name')->nullablde();
         
             // The description of the voucher - Not necessary 
             $table->text('description')->nullable();
         
-            // The number of uses currently
+            // số lượt đã sử dụng
             $table->integer('uses')->unsigned()->nullable();
         
-            // The max uses this voucher has
+            // số lượng max voucher phát ra
             $table->integer('max_uses')->unsigned()->nullable();
         
-            // How many times a user can use this voucher.
+            // người dùng có thể sử dụng tối đa bao nhiêu lần voucher
             $table->integer('max_uses_user')->unsigned()->nullable();
         
-            // The type can be: voucher, discount, sale. What ever you want.
-            $table->tinyInteger('type')->unsigned();
-        
-            // The amount to discount by (in pennies) in this example.
+            // số tiền chiết khấu tối đa
             $table->integer('discount_amount');
         
-            // Whether or not the voucher is a percentage or a fixed price. 
-            $table->boolean('is_fixed')->default(true);
+            // phần trăm 
+            $table->integer('percentage');
             
-            // When the voucher begins
+            // thòi gian bắt đầu
             $table->timestamp('starts_at')->nullable();
         
-            // When the voucher ends
+            // thời gian kết thúc
             $table->timestamp('expires_at')->nullable();
         
             // You know what this is...

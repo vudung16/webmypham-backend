@@ -237,6 +237,64 @@ class DatabaseSeeder extends Seeder
             'product_weight' => 6
         ]);
 
+        // data voucher
+        DB::table('cosmetics_vouchers')->insert([
+            'id' => 1,
+            'code' =>'MANHDUNG01',
+            'image' => 'voucher01.png',
+            'name' => 'Giảm giá 5% cho tổng giá trị đơn hàng',
+            'description' => 'Giảm giá 5% cho tổng giá trị đơn hàng',
+            'uses' => 5,
+            'max_uses' => 50,
+            'max_uses_user' => 2,
+            'discount_amount' => 50000,
+            'percentage' => 5,
+            'starts_at' => '2022-02-24 00:00:00.000000',
+            'expires_at' => '2022-03-24 00:00:00.000000'
+        ]);
+        DB::table('cosmetics_vouchers')->insert([
+            'id' => 2,
+            'code' =>'MANHDUNG02',
+            'image' => 'voucher02.png',
+            'name' => 'Giảm giá 10% cho tổng giá trị đơn hàng',
+            'description' => 'Giảm giá 10% cho tổng giá trị đơn hàng',
+            'uses' => 5,
+            'max_uses' => 50,
+            'max_uses_user' => 2,
+            'discount_amount' => 60000,
+            'percentage' => 10,
+            'starts_at' => '2022-02-24 00:00:00.000000',
+            'expires_at' => '2022-03-24 00:00:00.000000'
+        ]);
+        DB::table('cosmetics_vouchers')->insert([
+            'id' => 3,
+            'code' =>'MANHDUNG03',
+            'image' => 'voucher03.png',
+            'name' => 'Giảm giá 15% cho tổng giá trị đơn hàng',
+            'description' => 'Giảm giá 15% cho tổng giá trị đơn hàng',
+            'uses' => 5,
+            'max_uses' => 50,
+            'max_uses_user' => 2,
+            'discount_amount' => 70000,
+            'percentage' => 15,
+            'starts_at' => '2022-02-24 00:00:00.000000',
+            'expires_at' => '2022-03-24 00:00:00.000000'
+        ]);
+        DB::table('cosmetics_vouchers')->insert([
+            'id' => 4,
+            'code' =>'MANHDUNG04',
+            'image' => 'voucher04.png',
+            'name' => 'Giảm giá 20% cho tổng giá trị đơn hàng',
+            'description' => 'Giảm giá 20% cho tổng giá trị đơn hàng',
+            'uses' => 5,
+            'max_uses' => 50,
+            'max_uses_user' => 2,
+            'discount_amount' => 80000,
+            'percentage' => 20,
+            'starts_at' => '2022-02-24 00:00:00.000000',
+            'expires_at' => '2022-03-24 00:00:00.000000'
+        ]);
+
         // DB::table('users')->insert([
         //     'name' => 'admin',
         //     'password' => Hash::make('12345'),

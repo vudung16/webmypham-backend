@@ -14,6 +14,7 @@ use App\Models\Wishlist;
 use Carbon\Carbon;
 use App\Models\Order_detail;
 use App\Models\Order;
+use App\Models\Voucher;
 
 class WebviewController extends Controller
 {
@@ -312,5 +313,10 @@ class WebviewController extends Controller
         }
         // session()->forget('url_prev');
         // return redirect($url)->with('errors' ,'Lỗi trong quá trình thanh toán phí dịch vụ');
+    }
+
+    public function listVoucher() {
+        $voucher = Voucher::all();
+        return $this->responseSuccess($voucher);
     }
 }
