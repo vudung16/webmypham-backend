@@ -120,135 +120,168 @@ class WebviewController extends Controller
             }
             return $this->responseSuccess(['carts' => $wishlists, 'sum_quantity' => $sum_quantity, 'sum_price' => $sum_price]);
         } else {
-            $product = Product::find($request->product_id);
+            if ($request->type === 'delete') {
+                $order = Order::where('user_id', $request->user_id)->whereNull('action')->first();
+                $wishlist = Wishlist::where('product_id', $request->product_id)->where('user_id', $request->user_id)->first();
+                $orderDetail = Order_Detail::where('product_id', $request->product_id)->where('order_id', $order->order_id)->first();
 
-            if (!$product) {
-                return json_encode([
-                    'status' => false,
-                    'msg' => 'Sản phẩm không tồn tại.',
-                ]);
-            }
-    
-            // $currentUserId = auth()->id();
-            // $orderData = [
-            //     'user_id' => $currentUserId,
-            // ];
-    
-    
-            $currentWishlist = Wishlist::where('user_id', $request->user_id)->first();
-            if(!$currentWishlist) {
-                //Trường hợp chưa có wishlist thì tạo wishlist mới
-                try{
-                    $wishlistOrder = [
-                        'user_id' => $request->user_id,
-                        'product_id' => $request->product_id,
-                        'quantity' => $request->quantity,
-                    ];
-                    $wishlistOrder = Wishlist::create($wishlistOrder);
-                } catch(\Throwable $th) {
-                    \Log::info('thêm thất bại');
-                    \Log::info($th);
-                }
-            } else {
-                //Trường hợp wishlist đã tồn tại
-                $currentWishlistOrder = Wishlist::where('product_id', $request->product_id)->where('user_id', $request->user_id)->first();
+                $wishlist->delete();
+                $orderDetail->delete();
                 
-                try{
-                    if(!$currentWishlistOrder) {
-                        //trường hợp wishlist đã tồn tại nhưng product chưa tồn tại
-                        $wishlist = Wishlist::where('user_id', $request->user_id)->first();
-                        $order_detail = [
+
+                $wishlists = Product::select('cosmetics_product.*', 'cosmetics_wishlist.quantity as quantity')
+                    ->join('cosmetics_wishlist','cosmetics_wishlist.product_id','=','cosmetics_product.product_id')
+                    ->where('cosmetics_wishlist.user_id', $request->user_id)->get();
+                
+                foreach($wishlists as $pr) {
+                    $pr->product_image = env('APP_URL'). '/img/product/' . $pr->product_image;
+                }
+
+                $sum_quantity = 0;
+                foreach($wishlists as $key=>$value){
+                    if(isset($value->quantity)) {
+                        $sum_quantity += $value->quantity;
+                    }
+                }
+                $sum_price = 0;
+                foreach($wishlists as $key=>$value){
+                    if(isset($value->product_discount)) {
+                        $sum_price += ($value->product_price - (($value->product_discount /100) * $value->product_price)) * $value->quantity;
+                    } else {
+                        $sum_price += $value->product_discount;
+                    }
+                }
+                return $this->responseSuccess(['carts' => $wishlists, 'sum_quantity' => $sum_quantity, 'sum_price' => $sum_price]);
+
+            } else {
+                $product = Product::find($request->product_id);
+
+                if (!$product) {
+                    return json_encode([
+                        'status' => false,
+                        'msg' => 'Sản phẩm không tồn tại.',
+                    ]);
+                }
+        
+                $currentWishlist = Wishlist::where('user_id', $request->user_id)->first();
+                if(!$currentWishlist) {
+                    //Trường hợp chưa có wishlist thì tạo wishlist mới
+                    try{
+                        $wishlistOrder = [
                             'user_id' => $request->user_id,
                             'product_id' => $request->product_id,
                             'quantity' => $request->quantity,
                         ];
-                
-                        $wishlistOrder = Wishlist::create($order_detail);
-            
-                    } else {
-                        // trường hợp wishlist và product đã tồn tại
-                        $currentWishlistOrder->quantity += $request->quantity;
-                        $currentWishlistOrder->save();
+                        $wishlistOrder = Wishlist::create($wishlistOrder);
+                    } catch(\Throwable $th) {
+                        \Log::info('thêm thất bại');
+                        \Log::info($th);
                     }
-                } catch(\Throwable $th) {
-                    \Log::info('lỗi');
-                    \Log::info($th);
-                }
-            }
-    
-            // tạo order và order_deltail mới
-            $orderData1 = [
-                'user_id' => $request->user_id,
-            ];
-    
-            
-            $order = Order::where('user_id', $request->user_id)->whereNull('action')->first();
-            $wishlist = Wishlist::where('product_id', $request->product_id)->first();
-            if(!$order) {
-                try {
-                    $order1 = Order::create($orderData1);
-                    $productOrderDetail = [
-                        'order_id' => $order1->order_id,
-                        'product_id' => $request->product_id,
-                        'quantity' => $wishlist->quantity,
-                        'detail_amount' => !is_null($product->product_discount) ? ($product->product_price - (($product->product_discount /100) * $product->product_price)) * $wishlist->quantity : $product->product_price * $wishlist->quantity
-                    ];
-                    $orderDetail = Order_detail::create($productOrderDetail);
-                } catch (\Throwable $th) {
-                    \Log::info('lỗi');
-                    \Log::info($th);
-                }    
-            } else {
-                //trường hợp tồn tại order và product
-                $order1 = Order::where('user_id', $request->user_id)->whereNull('action')->first();
-                $orderDetail = Order_detail::where('product_id', $request->product_id)->where('order_id', $order1->order_id)->first();
-                $wishlist = Wishlist::where('product_id', $request->product_id)->first();
+                } else {
+                    //Trường hợp wishlist đã tồn tại
+                    $currentWishlistOrder = Wishlist::where('product_id', $request->product_id)->where('user_id', $request->user_id)->first();
+                    
+                    try{
+                        if(!$currentWishlistOrder) {
+                            //trường hợp wishlist đã tồn tại nhưng product chưa tồn tại
+                            $wishlist = Wishlist::where('user_id', $request->user_id)->first();
+                            $order_detail = [
+                                'user_id' => $request->user_id,
+                                'product_id' => $request->product_id,
+                                'quantity' => $request->quantity,
+                            ];
+                    
+                            $wishlistOrder = Wishlist::create($order_detail);
                 
-                try{
-                    if(!$orderDetail) { 
+                        } else {
+                            // trường hợp wishlist và product đã tồn tại
+                            if ($request->type === 'update') {
+                                $currentWishlistOrder->quantity = $request->quantity;
+                                $currentWishlistOrder->save();
+                            } else {
+                                $currentWishlistOrder->quantity += $request->quantity;
+                                $currentWishlistOrder->save();
+                            }
+                        }
+                    } catch(\Throwable $th) {
+                        \Log::info('lỗi');
+                        \Log::info($th);
+                    }
+                }
+        
+                // tạo order và order_deltail mới
+                $orderData1 = [
+                    'user_id' => $request->user_id,
+                ];
+        
+                
+                $order = Order::where('user_id', $request->user_id)->whereNull('action')->first();
+                $wishlist = Wishlist::where('product_id', $request->product_id)->first();
+                if(!$order) {
+                    try {
+                        $order1 = Order::create($orderData1);
                         $productOrderDetail = [
-                            'order_id' => $order->order_id,
-                            'product_id' => $product->product_id,
+                            'order_id' => $order1->order_id,
+                            'product_id' => $request->product_id,
                             'quantity' => $wishlist->quantity,
-                            'detail_amount' => !is_null($product->product_discount) ? $product->product_price - (($product->product_discount /100) * $product->product_price) * $wishlist->quantity : $product->product_price * $wishlist->quantity,
+                            'detail_amount' => !is_null($product->product_discount) ? ($product->product_price - (($product->product_discount /100) * $product->product_price)) * $wishlist->quantity : $product->product_price * $wishlist->quantity
                         ];
                         $orderDetail = Order_detail::create($productOrderDetail);
-                    } else {
-                        $orderDetail->quantity += $request->quantity;
-                        $orderDetail->detail_amount = !is_null($product->product_discount) ? ($product->product_price - (($product->product_discount /100) * $product->product_price)) * $wishlist->quantity : $product->product_price * $wishlist->quantity;
-                        $orderDetail->save();
-                    }
-                } catch(\Throwable $th) {
-                    \Log::info('lỗi');
-                    \Log::info($th);
-                }
-            }
-
-
-            $wishlists = Product::select('cosmetics_product.*', 'cosmetics_wishlist.quantity as quantity')
-                ->join('cosmetics_wishlist','cosmetics_wishlist.product_id','=','cosmetics_product.product_id')
-                ->where('cosmetics_wishlist.user_id', $request->user_id)->get();
-            
-            foreach($wishlists as $pr) {
-                $pr->product_image = env('APP_URL'). '/img/product/' . $pr->product_image;
-            }
-
-            $sum_quantity = 0;
-            foreach($wishlists as $key=>$value){
-                if(isset($value->quantity)) {
-                    $sum_quantity += $value->quantity;
-                }
-            }
-            $sum_price = 0;
-            foreach($wishlists as $key=>$value){
-                if(isset($value->product_discount)) {
-                    $sum_price += ($value->product_price - (($value->product_discount /100) * $value->product_price)) * $value->quantity;
+                    } catch (\Throwable $th) {
+                        \Log::info('lỗi');
+                        \Log::info($th);
+                    }    
                 } else {
-                    $sum_price += $value->product_discount;
+                    //trường hợp tồn tại order và product
+                    $order1 = Order::where('user_id', $request->user_id)->whereNull('action')->first();
+                    $orderDetail = Order_detail::where('product_id', $request->product_id)->where('order_id', $order1->order_id)->first();
+                    $wishlist = Wishlist::where('product_id', $request->product_id)->first();
+                    
+                    try{
+                        if(!$orderDetail) { 
+                            $productOrderDetail = [
+                                'order_id' => $order->order_id,
+                                'product_id' => $product->product_id,
+                                'quantity' => $wishlist->quantity,
+                                'detail_amount' => !is_null($product->product_discount) ? $product->product_price - (($product->product_discount /100) * $product->product_price) * $wishlist->quantity : $product->product_price * $wishlist->quantity,
+                            ];
+                            $orderDetail = Order_detail::create($productOrderDetail);
+                        } else {
+                            $orderDetail->quantity += $request->quantity;
+                            $orderDetail->detail_amount = !is_null($product->product_discount) ? ($product->product_price - (($product->product_discount /100) * $product->product_price)) * $wishlist->quantity : $product->product_price * $wishlist->quantity;
+                            $orderDetail->save();
+                        }
+                    } catch(\Throwable $th) {
+                        \Log::info('lỗi');
+                        \Log::info($th);
+                    }
                 }
+
+
+                $wishlists = Product::select('cosmetics_product.*', 'cosmetics_wishlist.quantity as quantity')
+                    ->join('cosmetics_wishlist','cosmetics_wishlist.product_id','=','cosmetics_product.product_id')
+                    ->where('cosmetics_wishlist.user_id', $request->user_id)->get();
+                
+                foreach($wishlists as $pr) {
+                    $pr->product_image = env('APP_URL'). '/img/product/' . $pr->product_image;
+                }
+
+                $sum_quantity = 0;
+                foreach($wishlists as $key=>$value){
+                    if(isset($value->quantity)) {
+                        $sum_quantity += $value->quantity;
+                    }
+                }
+                $sum_price = 0;
+                foreach($wishlists as $key=>$value){
+                    if(isset($value->product_discount)) {
+                        $sum_price += ($value->product_price - (($value->product_discount /100) * $value->product_price)) * $value->quantity;
+                    } else {
+                        $sum_price += $value->product_discount;
+                    }
+                }
+                return $this->responseSuccess(['carts' => $wishlists, 'sum_quantity' => $sum_quantity, 'sum_price' => $sum_price]);
             }
-            return $this->responseSuccess(['carts' => $wishlists, 'sum_quantity' => $sum_quantity, 'sum_price' => $sum_price]);
-            
         }
     }
 
@@ -317,9 +350,69 @@ class WebviewController extends Controller
 
     public function listVoucher() {
         $voucher = Voucher::all();
+        $params = [];
+        $status = true;
         foreach($voucher as $vc) {
-            $vc->image = env('APP_URL'). '/img/voucher/' . $vc->image;
+            if(Carbon::now() <= $vc->expires_at) {
+                $status = true;
+            } else {
+                $status = false;
+            }
+            $newData = [
+                "id" => $vc->id,
+                "code" => $vc->code,
+                "name" => $vc->name,
+                "image" => env('APP_URL'). '/img/voucher/' . $vc->image,
+                "end_date" => $vc->expires_at,
+                "status" => $status
+            ];
+            array_push($params, $newData);
         }
-        return $this->responseSuccess($voucher);
+        return $this->responseSuccess($params);
+    }
+
+    public function checkVoucher(Request $request) {
+        if ($request->code_voucher == '') {
+            $params = 'Bạn chưa chọn voucher';
+            return $this->responseError($params);
+        } else {
+            $voucher = Voucher::where('code', $request->code_voucher)->first();
+            if (!$voucher) {
+                $params = 'Voucher bạn nhập không tồn tại';
+                return $this->responseError($params);
+            } else {
+                if(Carbon::now() >= $voucher->expires_at) {
+                    $params = 'Voucher bạn nhập quá hạn sử dụng';
+                    return $this->responseError($params);
+                } else {
+                    if(Carbon::now() <= $voucher->starts_at) {
+                        $params = 'Voucher bạn nhập chưa đến ngày sử dụng';
+                        return $this->responseError($params);
+                    } else {
+                        if ($voucher->uses === 0) {
+                            $params = 'Voucher đã hết lượt sử dụng';
+                            return $this->responseError($params);
+                        } 
+                        else {
+                            $totalDiscount = $request->price * ($voucher->percentage * 0.01);
+                            if ($totalDiscount > $voucher->percentage) {
+                                $params = [
+                                    'discount_price' => $voucher->discount_amount,
+                                ];
+                                return $this->responseSuccess($params);
+                            } else {
+                                $params = [
+                                    'discount_price' => $totalDiscount,
+                                ];
+                                return $this->responseSuccess($params);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // $params = 'test';
+        // return $this->responseError($params);
     }
 }

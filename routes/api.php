@@ -26,3 +26,4 @@ Route::post('add-to-cart', 'App\Http\Controllers\Api\WebviewController@addToCart
 Route::post('payment', 'App\Http\Controllers\Api\WebviewController@payment')->name('api.home.payment');
 Route::get('return-vnpay', 'App\Http\Controllers\Api\WebviewController@returnVnpay')->name('api.home.returnvnpay');
 Route::get('list-voucher', 'App\Http\Controllers\Api\WebviewController@listVoucher')->name('api.home.listvoucher');
+Route::post('check-voucher', 'App\Http\Controllers\Api\WebviewController@checkVoucher')->name('api.home.checkvoucher');
