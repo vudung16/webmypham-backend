@@ -34,6 +34,9 @@ class CosmeticsVouchers extends Migration
         
             // người dùng có thể sử dụng tối đa bao nhiêu lần voucher
             $table->integer('max_uses_user')->unsigned()->nullable();
+
+            // áp dụng cho đơn hàng tối thiểu
+            $table->bigInteger('minimum_order');
         
             // số tiền chiết khấu tối đa
             $table->integer('discount_amount');

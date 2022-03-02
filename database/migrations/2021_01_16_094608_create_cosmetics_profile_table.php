@@ -14,11 +14,15 @@ class CreateCosmeticsProfileTable extends Migration
     public function up()
     {
         Schema::create('cosmetics_profile', function (Blueprint $table) {
-            $table->bigIncrements('profile_id');
-            $table->unsignedBigInteger('user_id');
-            $table->string('customer_name');
-            $table->string('customer_address');
-            $table->string('customer_phone');
+            $table->bigIncrements('id');
+            $table->bigInteger('order_id');
+            $table->string('name');
+            $table->string('email');
+            $table->string('phone');
+            $table->bigInteger('province_id');
+            $table->bigInteger('district_id');
+            $table->string('ward_id');
+            $table->text('note');
             $table->timestamps();
         });
     }

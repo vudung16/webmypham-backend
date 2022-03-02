@@ -13,12 +13,10 @@ class CosmeticsUserVoucher extends Migration
      */
     public function up()
     {
-        Schema::create( 'cosmetics_user_voucher', function ( Blueprint $table ) {
-            $table->bigIncrements( 'id' );
-            $table->integer( 'user_id' )->unsigned( );
-            $table->bigInteger( 'voucher_id' )->unsigned( );
-        
-            $table->unique( [ 'user_id', 'voucher_id' ] );
+        Schema::create('cosmetics_user_voucher', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->integer('user_id');
+            $table->bigInteger('voucher_id');
         });
     }
 

@@ -27,3 +27,4 @@ Route::post('payment', 'App\Http\Controllers\Api\WebviewController@payment')->na
 Route::get('return-vnpay', 'App\Http\Controllers\Api\WebviewController@returnVnpay')->name('api.home.returnvnpay');
 Route::get('list-voucher', 'App\Http\Controllers\Api\WebviewController@listVoucher')->name('api.home.listvoucher');
 Route::post('check-voucher', 'App\Http\Controllers\Api\WebviewController@checkVoucher')->name('api.home.checkvoucher');
+Route::post('category-product', 'App\Http\Controllers\Api\WebviewController@categoryProduct')->name('api.home.categoryproduct');

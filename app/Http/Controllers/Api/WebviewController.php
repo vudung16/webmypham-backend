@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\OrderRequest;
 use Illuminate\Http\Request;
 use App\Models\Slide;
 use App\Models\Product;
@@ -15,6 +16,8 @@ use Carbon\Carbon;
 use App\Models\Order_detail;
 use App\Models\Order;
 use App\Models\Voucher;
+use App\Models\UserVoucher;
+use App\Models\Profile;
 
 class WebviewController extends Controller
 {
@@ -74,6 +77,7 @@ class WebviewController extends Controller
         $rate = Rate::where('product_id', $product->product_id)->avg('rate_scores');
 
         $arr_img = [];
+        array_push($arr_img, $product->product_image);
         foreach($image as $img) {
             $img->product_image_name = env('APP_URL'). '/img/product_image/'.$img->product_image_name;
             array_push($arr_img, $img->product_image_name);
@@ -247,7 +251,11 @@ class WebviewController extends Controller
                             ];
                             $orderDetail = Order_detail::create($productOrderDetail);
                         } else {
-                            $orderDetail->quantity += $request->quantity;
+                            if ($request->type === 'update') {
+                                $orderDetail->quantity = $request->quantity;
+                            } else {
+                                $orderDetail->quantity += $request->quantity;
+                            }
                             $orderDetail->detail_amount = !is_null($product->product_discount) ? ($product->product_price - (($product->product_discount /100) * $product->product_price)) * $wishlist->quantity : $product->product_price * $wishlist->quantity;
                             $orderDetail->save();
                         }
@@ -285,56 +293,66 @@ class WebviewController extends Controller
         }
     }
 
-    public function payment(Request $request) {
-        session(['url_prev' => url()->previous()]);
-        $vnp_TmnCode = "2W0TX27O"; //Mã website tại VNPAY 
-        $vnp_HashSecret = "OVCTODOGEIHQBJVOYXXDCZIVPPEWBVSG"; //Chuỗi bí mật
-        $vnp_Url = "http://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-        $vnp_Returnurl = "http://127.0.0.1:2223/api/return-vnpay";
-        $vnp_TxnRef = date("YmdHis"); //Mã đơn hàng. Trong thực tế Merchant cần insert đơn hàng vào DB và gửi mã này sang VNPAY
-        $vnp_OrderInfo = "Thanh toán hóa đơn phí dich vụ";
-        $vnp_OrderType = 'billpayment';
-        $vnp_Amount = $request->total * 100;
-        $vnp_Locale = 'vn';
-        $vnp_IpAddr = request()->ip();
+    public function payment(OrderRequest $request) {
+        $validated = $request->validated();
 
-        $inputData = array(
-            "vnp_Version" => "2.0.0",
-            "vnp_TmnCode" => $vnp_TmnCode,
-            "vnp_Amount" => $vnp_Amount,
-            "vnp_Command" => "pay",
-            "vnp_CreateDate" => date('YmdHis'),
-            "vnp_CurrCode" => "VND",
-            "vnp_IpAddr" => $vnp_IpAddr,
-            "vnp_Locale" => $vnp_Locale,
-            "vnp_OrderInfo" => $vnp_OrderInfo,
-            "vnp_OrderType" => $vnp_OrderType,
-            "vnp_ReturnUrl" => $vnp_Returnurl,
-            "vnp_TxnRef" => $vnp_TxnRef,
-        );
-        if (isset($vnp_BankCode) && $vnp_BankCode != "") {
-            $inputData['vnp_BankCode'] = $vnp_BankCode;
-        }
-        ksort($inputData);
-        $query = "";
-        $i = 0;
-        $hashdata = "";
-        foreach ($inputData as $key => $value) {
-            if ($i == 1) {
-                $hashdata .= '&' . $key . "=" . $value;
-            } else {
-                $hashdata .= $key . "=" . $value;
-                $i = 1;
+        if ($request->type === 'vnpay') {
+            session(['url_prev' => url()->previous()]);
+            $vnp_TmnCode = "2W0TX27O"; //Mã website tại VNPAY 
+            $vnp_HashSecret = "OVCTODOGEIHQBJVOYXXDCZIVPPEWBVSG"; //Chuỗi bí mật
+            $vnp_Url = "http://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
+            $vnp_Returnurl = "http://127.0.0.1:2223/api/return-vnpay";
+            $vnp_TxnRef = date("YmdHis"); //Mã đơn hàng. Trong thực tế Merchant cần insert đơn hàng vào DB và gửi mã này sang VNPAY
+            $vnp_OrderInfo = "Thanh toán hóa đơn phí dich vụ";
+            $vnp_OrderType = 'billpayment';
+            $vnp_Amount = $request->total * 100;
+            $vnp_Locale = 'vn';
+            $vnp_IpAddr = request()->ip();
+
+            $inputData = array(
+                "vnp_Version" => "2.0.0",
+                "vnp_TmnCode" => $vnp_TmnCode,
+                "vnp_Amount" => $vnp_Amount,
+                "vnp_Command" => "pay",
+                "vnp_CreateDate" => date('YmdHis'),
+                "vnp_CurrCode" => "VND",
+                "vnp_IpAddr" => $vnp_IpAddr,
+                "vnp_Locale" => $vnp_Locale,
+                "vnp_OrderInfo" => $vnp_OrderInfo,
+                "vnp_OrderType" => $vnp_OrderType,
+                "vnp_ReturnUrl" => $vnp_Returnurl,
+                "vnp_TxnRef" => $vnp_TxnRef,
+            );
+            if (isset($vnp_BankCode) && $vnp_BankCode != "") {
+                $inputData['vnp_BankCode'] = $vnp_BankCode;
             }
-            $query .= urlencode($key) . "=" . urlencode($value) . '&';
+            ksort($inputData);
+            $query = "";
+            $i = 0;
+            $hashdata = "";
+            foreach ($inputData as $key => $value) {
+                if ($i == 1) {
+                    $hashdata .= '&' . $key . "=" . $value;
+                } else {
+                    $hashdata .= $key . "=" . $value;
+                    $i = 1;
+                }
+                $query .= urlencode($key) . "=" . urlencode($value) . '&';
+            }
+
+            $vnp_Url = $vnp_Url . "?" . $query;
+            if (isset($vnp_HashSecret)) {
+                $vnpSecureHash =   hash_hmac('sha512', $hashdata, $vnp_HashSecret);//  
+                $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
+            }
+            return $this->responseSuccess($vnp_Url);
         }
 
-        $vnp_Url = $vnp_Url . "?" . $query;
-        if (isset($vnp_HashSecret)) {
-            $vnpSecureHash =   hash_hmac('sha512', $hashdata, $vnp_HashSecret);//  
-            $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
+        if ($request->type === 'shipcode') {
+            $this->saveOrder($request->all());
+
+            return $this->responseSuccess(['success' => 'Đặt hàng thành công']);
         }
-        return $this->responseSuccess($vnp_Url);
     }
 
     public function returnVnpay(Request $request)
@@ -364,6 +382,8 @@ class WebviewController extends Controller
                 "name" => $vc->name,
                 "image" => env('APP_URL'). '/img/voucher/' . $vc->image,
                 "end_date" => $vc->expires_at,
+                "minimum_order" => $vc->minimum_order,
+                "description" => $vc->description,
                 "status" => $status
             ];
             array_push($params, $newData);
@@ -377,42 +397,100 @@ class WebviewController extends Controller
             return $this->responseError($params);
         } else {
             $voucher = Voucher::where('code', $request->code_voucher)->first();
+            $userVoucher = UserVoucher::where('user_id', $request->user_id)->where('voucher_id', $voucher->id)->get();
             if (!$voucher) {
                 $params = 'Voucher bạn nhập không tồn tại';
                 return $this->responseError($params);
             } else {
-                if(Carbon::now() >= $voucher->expires_at) {
-                    $params = 'Voucher bạn nhập quá hạn sử dụng';
+                if (count($userVoucher) >= $voucher->max_uses_user) {
+                    $params = 'Voucher bạn nhập đã sử dụng quá lần sử dụng';
                     return $this->responseError($params);
                 } else {
-                    if(Carbon::now() <= $voucher->starts_at) {
-                        $params = 'Voucher bạn nhập chưa đến ngày sử dụng';
+                    if(Carbon::now() >= $voucher->expires_at) {
+                        $params = 'Voucher bạn nhập quá hạn sử dụng';
                         return $this->responseError($params);
                     } else {
-                        if ($voucher->uses === 0) {
-                            $params = 'Voucher đã hết lượt sử dụng';
+                        if(Carbon::now() <= $voucher->starts_at) {
+                            $params = 'Voucher bạn nhập chưa đến ngày sử dụng';
                             return $this->responseError($params);
-                        } 
-                        else {
-                            $totalDiscount = $request->price * ($voucher->percentage * 0.01);
-                            if ($totalDiscount > $voucher->percentage) {
-                                $params = [
-                                    'discount_price' => $voucher->discount_amount,
-                                ];
-                                return $this->responseSuccess($params);
-                            } else {
-                                $params = [
-                                    'discount_price' => $totalDiscount,
-                                ];
-                                return $this->responseSuccess($params);
+                        } else {
+                            if ($voucher->uses === 0) {
+                                $params = 'Voucher đã hết lượt sử dụng';
+                                return $this->responseError($params);
+                            } 
+                            else {
+                                if ($request->price < $voucher->minimum_order) {
+                                    $params = 'Đơn hàng của bạn chưa đạt giá trị tối thiểu';
+                                    return $this->responseError($params);
+                                } else {
+                                    $totalDiscount = $request->price * ($voucher->percentage * 0.01);
+                                    if ($totalDiscount > $voucher->discount_amount) {
+                                        $params = [
+                                            'discount_price' => $voucher->discount_amount,
+                                            'voucher_id' => $voucher->id
+                                        ];
+                                        return $this->responseSuccess($params);
+                                    } else {
+                                        $params = [
+                                            'discount_price' => $totalDiscount,
+                                            'voucher_id' => $voucher->id
+                                        ];
+                                        return $this->responseSuccess($params);
+                                    }
+                                }
                             }
                         }
                     }
                 }
-            }
+            } 
         }
 
         // $params = 'test';
         // return $this->responseError($params);
     }
+
+    public function categoryproduct(Request $request) {
+        \Log::info($request->all());
+    }
+
+    public function saveOrder($request) {
+        $order = Order::where('user_id', $request['user_id'])->where('action', null)->first();
+        // lưu order
+        $paramsOrder = [
+            'order_time' => Carbon::now('Asia/Ho_Chi_Minh'),
+            'order_total_money' => $request['total'],
+            'pay_ship' => $request['pay_ship'],
+            'action' => 1,
+            'voucher_id' => $request['voucher_id'] 
+        ];
+        $updateOrder = Order::where('user_id', $order->user_id)->where('action', null)->update($paramsOrder);
+
+        //lưu thông tin vận chuyển
+        $paramsInfo = [
+            'order_id' => $order->order_id,
+            'name' => $request['name'],
+            'phone' => $request['phone'],
+            'email' => $request['email'],
+            'province_id' => $request['province'],
+            'district_id' => $request['district'],
+            'ward_id' => $request['ward'],
+            'note' => isset($request['note']) ? $request['note'] : ''
+        ];
+        $info = Profile::create($paramsInfo);
+
+        //lưu người sử dụng voucher
+        $paramsUserVoucher = [
+            'user_id' => $request['user_id'],
+            'voucher_id' => $request['voucher_id']
+        ];
+        $userVoucher = UserVoucher::create($paramsUserVoucher);
+
+        //cập nhật lại số lượt sử dụng voucher
+        $voucher = Voucher::find($request['voucher_id']);
+        $voucher->uses = $voucher->uses - 1;
+        $voucher->save();
+
+        // xóa wishlist
+        $wishlist = Wishlist::where('user_id', $request['user_id'])->delete();
+    } 
 }

@@ -247,6 +247,7 @@ class DatabaseSeeder extends Seeder
             'uses' => 5,
             'max_uses' => 50,
             'max_uses_user' => 2,
+            'minimum_order' => 200000,
             'discount_amount' => 50000,
             'percentage' => 5,
             'starts_at' => '2022-02-24 00:00:00.000000',
@@ -261,6 +262,7 @@ class DatabaseSeeder extends Seeder
             'uses' => 5,
             'max_uses' => 50,
             'max_uses_user' => 2,
+            'minimum_order' => 500000,
             'discount_amount' => 60000,
             'percentage' => 10,
             'starts_at' => '2022-02-24 00:00:00.000000',
@@ -275,6 +277,7 @@ class DatabaseSeeder extends Seeder
             'uses' => 5,
             'max_uses' => 50,
             'max_uses_user' => 2,
+            'minimum_order' => 700000,
             'discount_amount' => 70000,
             'percentage' => 15,
             'starts_at' => '2022-02-24 00:00:00.000000',
@@ -289,17 +292,32 @@ class DatabaseSeeder extends Seeder
             'uses' => 5,
             'max_uses' => 50,
             'max_uses_user' => 2,
+            'minimum_order' => 1000000,
             'discount_amount' => 80000,
             'percentage' => 20,
             'starts_at' => '2022-02-24 00:00:00.000000',
             'expires_at' => '2022-03-24 00:00:00.000000'
         ]);
 
-        // DB::table('users')->insert([
-        //     'name' => 'admin',
-        //     'password' => Hash::make('12345'),
-        //     'role' => 1,
-        //     'email' => 'admin@gmail.com'
-        // ]);
+        //data user
+        DB::table('users')->insert([
+            'id' => 1,
+            'name' => 'admin',
+            'password' => Hash::make('12345'),
+            'role' => 1,
+            'email' => 'admin@gmail.com'
+        ]);
+
+        //data user_voucher
+        DB::table('cosmetics_user_voucher')->insert([
+            'id' => 1,
+            'user_id' => 1,
+            'voucher_id' => 1,
+        ]);
+        DB::table('cosmetics_user_voucher')->insert([
+            'id' => 2,
+            'user_id' => 1,
+            'voucher_id' => 1,
+        ]);
     }
 }

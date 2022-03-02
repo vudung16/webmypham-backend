@@ -16,6 +16,7 @@ class CreateCosmeticsOrderTable extends Migration
         Schema::create('cosmetics_order', function (Blueprint $table) {
             $table->bigIncrements('order_id');
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('voucher_id')->nullable();
             $table->date('order_time')->nullable();
             $table->double('order_total_money')->nullable();
             $table->double('pay_ship')->nullable();

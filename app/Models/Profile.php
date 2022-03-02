@@ -7,11 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Profile extends Model
 {
-    // use HasFactory;
+    use HasFactory;
     public $table = "cosmetics_profile";
-    protected $primaryKey = 'profile_id'; 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+    protected $primaryKey = 'id';
+    protected $guarded = [];  
 }
