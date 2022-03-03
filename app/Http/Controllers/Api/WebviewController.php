@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api;
+use Illuminate\Support\Facades\DB;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OrderRequest;
@@ -65,6 +66,12 @@ class WebviewController extends Controller
         $category = Category::all();
         
         return $this->responseSuccess($category);
+    }
+
+    public function brand() {
+        $brand = Brand::all();
+        
+        return $this->responseSuccess($brand);
     }
 
     public function productDetail(Request $request) {
@@ -358,7 +365,6 @@ class WebviewController extends Controller
     public function returnVnpay(Request $request)
     {
         $url = 'https://webmypham-dev.vn:2222/checkout';
-        \Log::info($request->all());
         if($request->vnp_ResponseCode == "00") {
             return redirect($url);
         }
@@ -450,7 +456,34 @@ class WebviewController extends Controller
     }
 
     public function categoryproduct(Request $request) {
-        \Log::info($request->all());
+        $orderby = '';
+        $valueOrder = '';
+        if($request->arrange[0] === 'az') {
+            $orderby = 'product_name';
+            $valueOrder = 'asc';
+        } else if ($request->arrange[0] === 'za') {
+            $orderby = 'product_name';
+            $valueOrder = 'desc';
+        } else if ($request->arrange[0] === 'plus') {
+            $orderby = 'product_price';
+            $valueOrder = 'asc';
+        }else if ($request->arrange[0] === 'reduction') {
+            $orderby = 'product_price';
+            $valueOrder = 'desc';
+        }
+        
+        $product = DB::table('cosmetics_product')
+                    ->whereBetween('product_price', [$request->total[0],$request->total[1]])
+                    ->where('category_id', $request->category_id)
+                    ->whereIn('brand_id', $request->brand)
+                    ->orderBy($orderby, $valueOrder)
+                    ->limit(10)
+                    ->get();
+        foreach($product as $pr) {
+            $pr->product_image = env('APP_URL'). '/img/product/' . $pr->product_image;
+        }
+
+        return $this->responseSuccess($product);
     }
 
     public function saveOrder($request) {

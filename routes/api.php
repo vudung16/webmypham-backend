@@ -22,6 +22,7 @@ Route::get('product-discount', 'App\Http\Controllers\Api\WebviewController@produ
 Route::get('product-selling', 'App\Http\Controllers\Api\WebviewController@productSelling')->name('api.home.selling');
 Route::post('product-detail', 'App\Http\Controllers\Api\WebviewController@productDetail')->name('api.home.productdetail');
 Route::get('category', 'App\Http\Controllers\Api\WebviewController@category')->name('api.home.category');
+Route::get('brand', 'App\Http\Controllers\Api\WebviewController@brand')->name('api.home.brand');
 Route::post('add-to-cart', 'App\Http\Controllers\Api\WebviewController@addToCart')->name('api.home.addtocart');
 Route::post('payment', 'App\Http\Controllers\Api\WebviewController@payment')->name('api.home.payment');
 Route::get('return-vnpay', 'App\Http\Controllers\Api\WebviewController@returnVnpay')->name('api.home.returnvnpay');
