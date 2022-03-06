@@ -21,6 +21,7 @@ class CreateCosmeticsOrderTable extends Migration
             $table->double('order_total_money')->nullable();
             $table->double('pay_ship')->nullable();
             $table->integer('action')->nullable();
+            $table->integer('is_payment')->nullable();
             $table->timestamps();
         });
     }

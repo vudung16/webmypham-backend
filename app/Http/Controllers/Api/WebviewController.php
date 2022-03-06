@@ -387,9 +387,12 @@ class WebviewController extends Controller
                 "code" => $vc->code,
                 "name" => $vc->name,
                 "image" => env('APP_URL'). '/img/voucher/' . $vc->image,
+                "start_date" => $vc->starts_at,
                 "end_date" => $vc->expires_at,
                 "minimum_order" => $vc->minimum_order,
                 "description" => $vc->description,
+                "quantity" => $vc->max_uses_user,
+                "discount_amount" => $vc->discount_amount,
                 "status" => $status
             ];
             array_push($params, $newData);
@@ -487,6 +490,7 @@ class WebviewController extends Controller
     }
 
     public function saveOrder($request) {
+        // \Log::info($request);
         $order = Order::where('user_id', $request['user_id'])->where('action', null)->first();
         // lưu order
         $paramsOrder = [
@@ -494,10 +498,11 @@ class WebviewController extends Controller
             'order_total_money' => $request['total'],
             'pay_ship' => $request['pay_ship'],
             'action' => 1,
-            'voucher_id' => $request['voucher_id'] 
+            'voucher_id' => $request['voucher_id'],
+            'is_payment' => 1,
         ];
         $updateOrder = Order::where('user_id', $order->user_id)->where('action', null)->update($paramsOrder);
-
+        
         //lưu thông tin vận chuyển
         $paramsInfo = [
             'order_id' => $order->order_id,
@@ -511,19 +516,31 @@ class WebviewController extends Controller
         ];
         $info = Profile::create($paramsInfo);
 
-        //lưu người sử dụng voucher
-        $paramsUserVoucher = [
-            'user_id' => $request['user_id'],
-            'voucher_id' => $request['voucher_id']
-        ];
-        $userVoucher = UserVoucher::create($paramsUserVoucher);
+        if ($request['voucher_id']) {
 
-        //cập nhật lại số lượt sử dụng voucher
-        $voucher = Voucher::find($request['voucher_id']);
-        $voucher->uses = $voucher->uses - 1;
-        $voucher->save();
+            //lưu người sử dụng voucher
+            $paramsUserVoucher = [
+                'user_id' => $request['user_id'],
+                'voucher_id' => $request['voucher_id']
+            ];
+            $userVoucher = UserVoucher::create($paramsUserVoucher);
+
+            //cập nhật lại số lượt sử dụng voucher
+        
+            $voucher = Voucher::find($request['voucher_id']);
+            $voucher->uses = $voucher->uses - 1;
+            $voucher->save();
+        }
 
         // xóa wishlist
         $wishlist = Wishlist::where('user_id', $request['user_id'])->delete();
     } 
+
+    public function getCart(Request $request) {
+        $order = Order::where('user_id', $request->user_id)->where('action', $request->status)->first();
+        if ($order) {
+            $detail = Order_detail::where('order_id', $order->order_id)->get();
+            return $this->responseSuccess(['order' => $order, 'order_detail' => $detail]);
+        }
+    }
 }
