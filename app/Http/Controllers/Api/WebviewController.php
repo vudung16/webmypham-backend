@@ -19,6 +19,8 @@ use App\Models\Order;
 use App\Models\Voucher;
 use App\Models\UserVoucher;
 use App\Models\Profile;
+use Illuminate\Support\Str;
+
 
 class WebviewController extends Controller
 {
@@ -500,6 +502,7 @@ class WebviewController extends Controller
             'action' => 1,
             'voucher_id' => $request['voucher_id'],
             'is_payment' => 1,
+            'code' => time() . '_' . Str::random(4)
         ];
         $updateOrder = Order::where('user_id', $order->user_id)->where('action', null)->update($paramsOrder);
         
@@ -537,10 +540,54 @@ class WebviewController extends Controller
     } 
 
     public function getCart(Request $request) {
-        $order = Order::where('user_id', $request->user_id)->where('action', $request->status)->first();
+        \Log::info($request->all());
+        $order = Order::where('user_id', $request->user_id)->where('action', $request->status)->get();
+        $array = [
+            "order" => '',
+            "detail_order" => ''
+        ];
+        $arrayTotal = [];
         if ($order) {
-            $detail = Order_detail::where('order_id', $order->order_id)->get();
-            return $this->responseSuccess(['order' => $order, 'order_detail' => $detail]);
+            $voucherData;
+            foreach ($order as $key => $or) {
+                $voucherData = Voucher::where('id', $or->voucher_id)->first();
+                $arr = [];
+                $sum = 0;
+                $detail = Order_detail::where('order_id', $or->order_id)->get();
+                foreach($detail as $dt) {
+                    $product = Product::where('product_id',$dt->product_id)->first();
+                    $sum = $sum + $dt->detail_amount;
+                    $params = [
+                        'order_detail_id' => $dt->order_detail_id,
+                        'quantity' => $dt->quantity,
+                        'detail_amount' => $dt->detail_amount,
+                        'product_id' => $product->product_id,
+                        'product_name' => $product->product_name,
+                        'product_image' => env('APP_URL'). '/img/product/' . $product->product_image,
+                    ];
+                    array_push($arr, $params);
+                }
+
+                $voucher = 0;
+                if ($voucherData) {
+                    if ($sum > $voucherData->discount_amount) {
+                        $voucher = $voucherData->discount_amount;
+                    } else {
+                        $voucher = $totalDiscount;
+                    }
+                }
+
+                $dataOrder = [
+                    'code' => $or->code,
+                    'pay_ship' => $or->pay_ship,
+                    'order_total_money' => $or->order_total_money,
+                    'order_time' => $or->order_time,
+                    'voucher' => $voucher
+                ];
+                
+                array_push($arrayTotal, [$array['order'] = $dataOrder, $array['detail_order'] = $arr]);
+            }
+            return $this->responseSuccess( $arrayTotal);
         }
     }
 }
