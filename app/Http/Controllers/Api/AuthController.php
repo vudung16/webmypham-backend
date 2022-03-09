@@ -22,7 +22,12 @@ class AuthController extends Controller
             $params = 'Tài khoản hoặc mật khẩu không chính xác';
             return $this->responseError($params);
         }
-        return $this->responseSuccess($token)->header('Authorization', $token);
+        $user = User::find(Auth::user()->id);
+        $params = [
+            'token' => $token,
+            'role' => $user->role
+        ];
+        return $this->responseSuccess($params)->header('Authorization', $token);
     }
 
     public function register(RegisterRequest $request)
