@@ -109,29 +109,8 @@ class WebviewController extends Controller
     // thêm vào giỏ hàng
     public function addToCart(Request $request) {
         if ($request->product_id === null && $request->quantity === null) {
-            $wishlists = Product::select('cosmetics_product.*', 'cosmetics_wishlist.quantity as quantity')
-            ->join('cosmetics_wishlist','cosmetics_wishlist.product_id','=','cosmetics_product.product_id')
-            ->where('cosmetics_wishlist.user_id', $request->user_id)->get();
-
-            foreach($wishlists as $pr) {
-                $pr->product_image = env('APP_URL'). '/img/product/' . $pr->product_image;
-            }
-
-            $sum_quantity = 0;
-            foreach($wishlists as $key=>$value){
-                if(isset($value->quantity)) {
-                    $sum_quantity += $value->quantity;
-                }
-            }
-            $sum_price = 0;
-            foreach($wishlists as $key=>$value){
-                if(isset($value->product_discount)) {
-                    $sum_price += ($value->product_price - (($value->product_discount /100) * $value->product_price)) * $value->quantity;
-                } else {
-                    $sum_price += $value->product_discount;
-                }
-            }
-            return $this->responseSuccess(['carts' => $wishlists, 'sum_quantity' => $sum_quantity, 'sum_price' => $sum_price]);
+            $getCart = $this->getCartOrder($request->user_id);
+            return $this->responseSuccess(['carts' => $getCart['wishlists'], 'sum_quantity' => $getCart['sum_quantity'], 'sum_price' => $getCart['sum_price']]);
         } else {
             if ($request->type === 'delete') {
                 $order = Order::where('user_id', $request->user_id)->whereNull('action')->first();
@@ -142,29 +121,8 @@ class WebviewController extends Controller
                 $orderDetail->delete();
                 
 
-                $wishlists = Product::select('cosmetics_product.*', 'cosmetics_wishlist.quantity as quantity')
-                    ->join('cosmetics_wishlist','cosmetics_wishlist.product_id','=','cosmetics_product.product_id')
-                    ->where('cosmetics_wishlist.user_id', $request->user_id)->get();
-                
-                foreach($wishlists as $pr) {
-                    $pr->product_image = env('APP_URL'). '/img/product/' . $pr->product_image;
-                }
-
-                $sum_quantity = 0;
-                foreach($wishlists as $key=>$value){
-                    if(isset($value->quantity)) {
-                        $sum_quantity += $value->quantity;
-                    }
-                }
-                $sum_price = 0;
-                foreach($wishlists as $key=>$value){
-                    if(isset($value->product_discount)) {
-                        $sum_price += ($value->product_price - (($value->product_discount /100) * $value->product_price)) * $value->quantity;
-                    } else {
-                        $sum_price += $value->product_discount;
-                    }
-                }
-                return $this->responseSuccess(['carts' => $wishlists, 'sum_quantity' => $sum_quantity, 'sum_price' => $sum_price]);
+                $getCart = $this->getCartOrder($request->user_id);
+                return $this->responseSuccess(['carts' => $getCart['wishlists'], 'sum_quantity' => $getCart['sum_quantity'], 'sum_price' => $getCart['sum_price']]);
 
             } else {
                 $product = Product::find($request->product_id);
@@ -275,29 +233,8 @@ class WebviewController extends Controller
                 }
 
 
-                $wishlists = Product::select('cosmetics_product.*', 'cosmetics_wishlist.quantity as quantity')
-                    ->join('cosmetics_wishlist','cosmetics_wishlist.product_id','=','cosmetics_product.product_id')
-                    ->where('cosmetics_wishlist.user_id', $request->user_id)->get();
-                
-                foreach($wishlists as $pr) {
-                    $pr->product_image = env('APP_URL'). '/img/product/' . $pr->product_image;
-                }
-
-                $sum_quantity = 0;
-                foreach($wishlists as $key=>$value){
-                    if(isset($value->quantity)) {
-                        $sum_quantity += $value->quantity;
-                    }
-                }
-                $sum_price = 0;
-                foreach($wishlists as $key=>$value){
-                    if(isset($value->product_discount)) {
-                        $sum_price += ($value->product_price - (($value->product_discount /100) * $value->product_price)) * $value->quantity;
-                    } else {
-                        $sum_price += $value->product_discount;
-                    }
-                }
-                return $this->responseSuccess(['carts' => $wishlists, 'sum_quantity' => $sum_quantity, 'sum_price' => $sum_price]);
+                $getCart = $this->getCartOrder($request->user_id);
+                return $this->responseSuccess(['carts' => $getCart['wishlists'], 'sum_quantity' => $getCart['sum_quantity'], 'sum_price' => $getCart['sum_price']]);
             }
         }
     }
@@ -589,5 +526,38 @@ class WebviewController extends Controller
             }
             return $this->responseSuccess( $arrayTotal);
         }
+    }
+
+    public function getCartOrder($request) {
+        $wishlists = Product::select('cosmetics_product.*', 'cosmetics_wishlist.quantity as quantity')
+            ->join('cosmetics_wishlist','cosmetics_wishlist.product_id','=','cosmetics_product.product_id')
+            ->where('cosmetics_wishlist.user_id', $request)->orderBy('cosmetics_wishlist.wishlist_id','asc')->get();
+        
+        foreach($wishlists as $pr) {
+            $pr->product_image = env('APP_URL'). '/img/product/' . $pr->product_image;
+        }
+
+        $sum_quantity = 0;
+        foreach($wishlists as $key=>$value){
+            if(isset($value->quantity)) {
+                $sum_quantity += $value->quantity;
+            }
+        }
+        $sum_price = 0;
+        foreach($wishlists as $key=>$value){
+            if(isset($value->product_discount)) {
+                $sum_price += ($value->product_price - (($value->product_discount /100) * $value->product_price)) * $value->quantity;
+            } else {
+                $sum_price += $value->product_discount;
+            }
+        }
+
+        $params = [
+            'wishlists' => $wishlists,
+            'sum_quantity' => $sum_quantity,
+            'sum_price' => $sum_price
+        ];
+
+        return $params;
     }
 }
