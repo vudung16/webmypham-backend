@@ -16,11 +16,13 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
         $validated = $request->validated();
-
         $credentials = $request->only('email', 'password');
         if ( !$token = JWTAuth::attempt($credentials)) {
             $params = 'Tài khoản hoặc mật khẩu không chính xác';
             return $this->responseError($params);
+        }
+        if ($request->remember === true) {
+            JWTAuth::factory()->setTTL(60*60*7);
         }
         $user = User::find(Auth::user()->id);
         $params = [
@@ -41,6 +43,21 @@ class AuthController extends Controller
         $user->role = 2;
         $user->save();
         return $this->responseSuccess();
+    }
+
+    public function logout(Request $request)
+    {
+        $this->validate($request, [
+            'token' => 'required'
+        ]);
+
+        try {
+            JWTAuth::invalidate($request->token);
+            return $this->responseSuccess();
+        } catch (JWTException $exception) {
+            $params = 'Bạn chưa đăng nhập';
+            return $this->responseError($params);
+        }
     }
 
     public function user(Request $request)

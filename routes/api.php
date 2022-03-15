@@ -35,6 +35,7 @@ Route::post('category-product', 'App\Http\Controllers\Api\WebviewController@cate
 Route::post('auth/login', 'App\Http\Controllers\Api\AuthController@login');
 Route::post('auth/register', 'App\Http\Controllers\Api\AuthController@register');
 Route::group(['middleware' => 'jwt.auth'], function(){
+  Route::post('auth/logout', 'App\Http\Controllers\Api\AuthController@logout');
   Route::get('auth/user', 'App\Http\Controllers\Api\AuthController@user');
   Route::post('add-to-cart', 'App\Http\Controllers\Api\WebviewController@addToCart')->name('api.home.addtocart');
   Route::post('get-cart', 'App\Http\Controllers\Api\WebviewController@getCart')->name('api.getcart');

@@ -413,10 +413,17 @@ class WebviewController extends Controller
             $orderby = 'product_price';
             $valueOrder = 'desc';
         }
-        
+        $search = $request->search;
+        $category = $request->category_id;
+
         $product = DB::table('cosmetics_product')
+                    ->when(isset($search), function ($query) use ($search) {
+                        return $query->where('product_name', 'like', "%$search%");
+                    })
+                    ->when(isset($category), function ($query) use ($category) {
+                        return $query->where('category_id', 'like', "%$category%");
+                    })
                     ->whereBetween('product_price', [$request->total[0],$request->total[1]])
-                    ->where('category_id', $request->category_id)
                     ->whereIn('brand_id', $request->brand)
                     ->orderBy($orderby, $valueOrder)
                     ->limit(10)
@@ -424,8 +431,12 @@ class WebviewController extends Controller
         foreach($product as $pr) {
             $pr->product_image = env('APP_URL'). '/img/product/' . $pr->product_image;
         }
+        $dataCategory='';
+        if($category) {
+            $dataCategory = Category::where('category_id', $request->category_id)->first();
+        }
 
-        return $this->responseSuccess($product);
+        return $this->responseSuccess(['product' => $product, 'category' => $dataCategory]);
     }
 
     public function saveOrder($request) {
@@ -477,8 +488,12 @@ class WebviewController extends Controller
     } 
 
     public function getCart(Request $request) {
-        \Log::info($request->all());
-        $order = Order::where('user_id', $request->user_id)->where('action', $request->status)->get();
+        $status = $request->status;
+        $order = Order::where('user_id', $request->user_id)
+                        ->when(isset($status), function ($query) use ($status) {
+                            return $query->where('action', 'like', "%$status%");
+                        })
+                        ->get();
         $array = [
             "order" => '',
             "detail_order" => ''
