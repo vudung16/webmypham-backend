@@ -520,7 +520,7 @@ class WebviewController extends Controller
                     array_push($arr, $params);
                 }
 
-                $voucher = 0;
+                $voucher = 0; 
                 if ($voucherData) {
                     if ($sum > $voucherData->discount_amount) {
                         $voucher = $voucherData->discount_amount;
