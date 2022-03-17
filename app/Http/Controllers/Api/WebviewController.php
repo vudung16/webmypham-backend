@@ -20,6 +20,7 @@ use App\Models\Voucher;
 use App\Models\UserVoucher;
 use App\Models\Profile;
 use Illuminate\Support\Str;
+use App\Models\User;
 
 
 class WebviewController extends Controller
@@ -574,5 +575,30 @@ class WebviewController extends Controller
         ];
 
         return $params;
+    }
+
+    public function rating(Request $request) {
+        // $id = auth()->id;
+        $dataRate = array();
+        // $wishlists = DB::table('cosmetics_product')
+        //     ->join('user','user.id','=','cosmetics_rate.user_id')
+        //     ->orderByRaw("CASE WHEN user.id  = 'Male' then 1 WHEN gender  = 'Female' then 2 WHEN gender  = 'Others' then 3  Else 4 END DESC")->get();
+
+
+
+        $rating = Rate::where('product_id', $request->product_id)->paginate(2);
+        $rating->getCollection()->transform(function ($value) {
+            $user = User::where('id', $value->user_id)->first();
+            return $params = [
+                'rate_id' => $value->rate_id,
+                'user_id' => $value->user_id,
+                'rate_scores' => $value->rate_scores,
+                'rate_comment' => $value->rate_comment,
+                'date' => $value->created_at,
+                'name' => $user->name,
+                'image' => env('APP_URL'). '/img/user/' . $user->image
+            ];
+        });
+        return $this->responseSuccess($rating);
     }
 }

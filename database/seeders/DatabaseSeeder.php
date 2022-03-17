@@ -304,6 +304,7 @@ class DatabaseSeeder extends Seeder
             'id' => 1,
             'name' => 'admin',
             'password' => Hash::make('12345'),
+            'image' => 'abc.png',
             'role' => 1,
             'email' => 'admin@gmail.com'
         ]);
