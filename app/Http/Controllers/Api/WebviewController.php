@@ -587,20 +587,21 @@ class WebviewController extends Controller
              ->where('cosmetics_rate.product_id', $request->product_id)
              ->orderByRaw("CASE WHEN cosmetics_rate.user_id = '$user' then 1 END DESC")
              ->paginate(5);
+        if ($rate['data']) {
+            $rate->getCollection()->transform(function ($value) {
+                $user = User::where('id', $value->user_id)->first();
 
-        $rate->getCollection()->transform(function ($value) {
-            $user = User::where('id', $value->user_id)->first();
-
-            return $params = [
-                'rate_id' => $value->rate_id,
-                'user_id' => $value->user_id,
-                'rate_scores' => $value->rate_scores,
-                'rate_comment' => $value->rate_comment,
-                'date' => $value->created_at,
-                'name' => $user->name,
-                'image' => env('APP_URL'). '/img/user/' . $user->image
-            ];
-        });
+                return $params = [
+                    'rate_id' => $value->rate_id,
+                    'user_id' => $value->user_id,
+                    'rate_scores' => $value->rate_scores,
+                    'rate_comment' => $value->rate_comment,
+                    'date' => $value->created_at,
+                    'name' => $user->name,
+                    'image' => env('APP_URL') . '/img/user/' . $user->image
+                ];
+            });
+        }
         return $this->responseSuccess($rate);
     }
 
