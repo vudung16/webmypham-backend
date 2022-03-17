@@ -27,7 +27,8 @@ class AuthController extends Controller
         $user = User::find(Auth::user()->id);
         $params = [
             'token' => $token,
-            'role' => $user->role
+            'role' => $user->role,
+            'user_id' => $user->id
         ];
         return $this->responseSuccess($params)->header('Authorization', $token);
     }

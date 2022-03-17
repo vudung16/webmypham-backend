@@ -30,6 +30,7 @@ Route::get('list-voucher', 'App\Http\Controllers\Api\WebviewController@listVouch
 Route::post('check-voucher', 'App\Http\Controllers\Api\WebviewController@checkVoucher')->name('api.home.checkvoucher');
 Route::post('category-product', 'App\Http\Controllers\Api\WebviewController@categoryProduct')->name('api.home.categoryproduct');
 Route::post('rating', 'App\Http\Controllers\Api\WebviewController@rating')->name('api.home.rating');
+Route::post('comment', 'App\Http\Controllers\Api\WebviewController@comment')->name('api.comment');
 
 
 //Login

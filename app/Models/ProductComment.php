@@ -9,6 +9,7 @@ class ProductComment extends Model
 {
     use HasFactory;
     protected $table = "cosmetics_product_comment";
+    protected $fillable = ['parent_id','user_id','product_id','content'];
 
     public function product() {
     	return $this->belongsTo('App\Models\Product','product_id','product_id');

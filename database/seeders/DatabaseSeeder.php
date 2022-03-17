@@ -91,14 +91,14 @@ class DatabaseSeeder extends Seeder
         // data Rate
         DB::table('cosmetics_rate')->insert([
             'rate_id' => 1,
-            'user_id' => 1,
+            'user_id' => 2,
             'product_id' => 1,
             'rate_scores' => 4,
             'rate_comment' => 'Sản phẩm rất tốt'
         ]);
         DB::table('cosmetics_rate')->insert([
             'rate_id' => 2,
-            'user_id' => 1,
+            'user_id' => 3,
             'product_id' => 1,
             'rate_scores' => 3,
             'rate_comment' => 'Sản phẩm rất tốt'
@@ -112,34 +112,34 @@ class DatabaseSeeder extends Seeder
         ]);
         DB::table('cosmetics_rate')->insert([
             'rate_id' => 4,
-            'user_id' => 1,
+            'user_id' => 4,
             'product_id' => 1,
             'rate_scores' => 2,
             'rate_comment' => 'Sản phẩm rất tốt'
         ]);
         DB::table('cosmetics_rate')->insert([
             'rate_id' => 5,
-            'user_id' => 1,
+            'user_id' => 5,
             'product_id' => 1,
             'rate_scores' => 5,
             'rate_comment' => 'Sản phẩm rất tốt'
         ]);
         DB::table('cosmetics_rate')->insert([
             'rate_id' => 6,
-            'user_id' => 1,
+            'user_id' => 6,
             'product_id' => 1,
             'rate_scores' => 3,
             'rate_comment' => 'Sản phẩm rất tốt'
         ]);
         DB::table('cosmetics_rate')->insert([
             'rate_id' => 7,
-            'user_id' => 1,
+            'user_id' => 7,
             'product_id' => 1,
             'rate_scores' => 4,
             'rate_comment' => 'Sản phẩm rất tốt'
         ]);
 
-        // data Product 
+        // data Product
         DB::table('cosmetics_product')->insert([
             'product_id' => 1,
             'product_name' =>'Bột uống đẹp da The Collagen Shiseido 126g – Mẫu 2020',
@@ -303,6 +303,54 @@ class DatabaseSeeder extends Seeder
         DB::table('users')->insert([
             'id' => 1,
             'name' => 'admin',
+            'password' => Hash::make('12345'),
+            'image' => 'abc.png',
+            'role' => 1,
+            'email' => 'admin@gmail.com'
+        ]);
+        DB::table('users')->insert([
+            'id' => 2,
+            'name' => 'admin2',
+            'password' => Hash::make('12345'),
+            'image' => 'abc.png',
+            'role' => 1,
+            'email' => 'admin@gmail.com'
+        ]);
+        DB::table('users')->insert([
+            'id' => 3,
+            'name' => 'admin3',
+            'password' => Hash::make('12345'),
+            'image' => 'abc.png',
+            'role' => 1,
+            'email' => 'admin@gmail.com'
+        ]);
+        DB::table('users')->insert([
+            'id' => 4,
+            'name' => 'admin4',
+            'password' => Hash::make('12345'),
+            'image' => 'abc.png',
+            'role' => 1,
+            'email' => 'admin@gmail.com'
+        ]);
+        DB::table('users')->insert([
+            'id' => 5,
+            'name' => 'admin5',
+            'password' => Hash::make('12345'),
+            'image' => 'abc.png',
+            'role' => 1,
+            'email' => 'admin@gmail.com'
+        ]);
+        DB::table('users')->insert([
+            'id' => 6,
+            'name' => 'admin6',
+            'password' => Hash::make('12345'),
+            'image' => 'abc.png',
+            'role' => 1,
+            'email' => 'admin@gmail.com'
+        ]);
+        DB::table('users')->insert([
+            'id' => 7,
+            'name' => 'admin7',
             'password' => Hash::make('12345'),
             'image' => 'abc.png',
             'role' => 1,

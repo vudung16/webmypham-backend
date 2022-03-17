@@ -21,6 +21,10 @@ use App\Models\UserVoucher;
 use App\Models\Profile;
 use Illuminate\Support\Str;
 use App\Models\User;
+use App\Models\ProductComment;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use JWTAuth;
 
 
 class WebviewController extends Controller
@@ -28,7 +32,7 @@ class WebviewController extends Controller
     public function homeSlide() {
         $slide = Slide::where(['slide_status'=> 1])->orderBy('slide_id', 'DESC')->limit(3)->get();
         $banner = Slide::where(['slide_status'=> 0])->orderBy('slide_id', 'DESC')->limit(4)->get();
-        
+
         $array = [];
         $img = '';
         foreach($slide as $sl) {
@@ -67,20 +71,20 @@ class WebviewController extends Controller
 
     public function category() {
         $category = Category::all();
-        
+
         return $this->responseSuccess($category);
     }
 
     public function brand() {
         $brand = Brand::all();
-        
+
         return $this->responseSuccess($brand);
     }
 
     public function productDetail(Request $request) {
         $product = Product::findOrFail($request->id);
         $product->product_image = env('APP_URL'). '/img/product/' . $product->product_image;
-        
+
         $brand = Brand::where('brand_id', $product->brand_id)->first();
         $image = Productimage::where('product_id', $request->id)->get();
         $category = Category::where('category_id', $product->category_id)->first();
@@ -120,7 +124,7 @@ class WebviewController extends Controller
 
                 $wishlist->delete();
                 $orderDetail->delete();
-                
+
 
                 $getCart = $this->getCartOrder($request->user_id);
                 return $this->responseSuccess(['carts' => $getCart['wishlists'], 'sum_quantity' => $getCart['sum_quantity'], 'sum_price' => $getCart['sum_price']]);
@@ -134,7 +138,7 @@ class WebviewController extends Controller
                         'msg' => 'Sản phẩm không tồn tại.',
                     ]);
                 }
-        
+
                 $currentWishlist = Wishlist::where('user_id', $request->user_id)->first();
                 if(!$currentWishlist) {
                     //Trường hợp chưa có wishlist thì tạo wishlist mới
@@ -152,7 +156,7 @@ class WebviewController extends Controller
                 } else {
                     //Trường hợp wishlist đã tồn tại
                     $currentWishlistOrder = Wishlist::where('product_id', $request->product_id)->where('user_id', $request->user_id)->first();
-                    
+
                     try{
                         if(!$currentWishlistOrder) {
                             //trường hợp wishlist đã tồn tại nhưng product chưa tồn tại
@@ -162,9 +166,9 @@ class WebviewController extends Controller
                                 'product_id' => $request->product_id,
                                 'quantity' => $request->quantity,
                             ];
-                    
+
                             $wishlistOrder = Wishlist::create($order_detail);
-                
+
                         } else {
                             // trường hợp wishlist và product đã tồn tại
                             if ($request->type === 'update') {
@@ -180,13 +184,13 @@ class WebviewController extends Controller
                         \Log::info($th);
                     }
                 }
-        
+
                 // tạo order và order_deltail mới
                 $orderData1 = [
                     'user_id' => $request->user_id,
                 ];
-        
-                
+
+
                 $order = Order::where('user_id', $request->user_id)->whereNull('action')->first();
                 $wishlist = Wishlist::where('product_id', $request->product_id)->first();
                 if(!$order) {
@@ -202,15 +206,15 @@ class WebviewController extends Controller
                     } catch (\Throwable $th) {
                         \Log::info('lỗi');
                         \Log::info($th);
-                    }    
+                    }
                 } else {
                     //trường hợp tồn tại order và product
                     $order1 = Order::where('user_id', $request->user_id)->whereNull('action')->first();
                     $orderDetail = Order_detail::where('product_id', $request->product_id)->where('order_id', $order1->order_id)->first();
                     $wishlist = Wishlist::where('product_id', $request->product_id)->first();
-                    
+
                     try{
-                        if(!$orderDetail) { 
+                        if(!$orderDetail) {
                             $productOrderDetail = [
                                 'order_id' => $order->order_id,
                                 'product_id' => $product->product_id,
@@ -245,7 +249,7 @@ class WebviewController extends Controller
 
         if ($request->type === 'vnpay') {
             session(['url_prev' => url()->previous()]);
-            $vnp_TmnCode = "2W0TX27O"; //Mã website tại VNPAY 
+            $vnp_TmnCode = "2W0TX27O"; //Mã website tại VNPAY
             $vnp_HashSecret = "OVCTODOGEIHQBJVOYXXDCZIVPPEWBVSG"; //Chuỗi bí mật
             $vnp_Url = "http://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
             $vnp_Returnurl = "http://127.0.0.1:2223/api/return-vnpay";
@@ -289,7 +293,7 @@ class WebviewController extends Controller
 
             $vnp_Url = $vnp_Url . "?" . $query;
             if (isset($vnp_HashSecret)) {
-                $vnpSecureHash =   hash_hmac('sha512', $hashdata, $vnp_HashSecret);//  
+                $vnpSecureHash =   hash_hmac('sha512', $hashdata, $vnp_HashSecret);//
                 $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
             }
             return $this->responseSuccess($vnp_Url);
@@ -366,7 +370,7 @@ class WebviewController extends Controller
                             if ($voucher->uses === 0) {
                                 $params = 'Voucher đã hết lượt sử dụng';
                                 return $this->responseError($params);
-                            } 
+                            }
                             else {
                                 if ($request->price < $voucher->minimum_order) {
                                     $params = 'Đơn hàng của bạn chưa đạt giá trị tối thiểu';
@@ -391,7 +395,7 @@ class WebviewController extends Controller
                         }
                     }
                 }
-            } 
+            }
         }
 
         // $params = 'test';
@@ -454,7 +458,7 @@ class WebviewController extends Controller
             'code' => time() . '_' . Str::random(4)
         ];
         $updateOrder = Order::where('user_id', $order->user_id)->where('action', null)->update($paramsOrder);
-        
+
         //lưu thông tin vận chuyển
         $paramsInfo = [
             'order_id' => $order->order_id,
@@ -478,7 +482,7 @@ class WebviewController extends Controller
             $userVoucher = UserVoucher::create($paramsUserVoucher);
 
             //cập nhật lại số lượt sử dụng voucher
-        
+
             $voucher = Voucher::find($request['voucher_id']);
             $voucher->uses = $voucher->uses - 1;
             $voucher->save();
@@ -486,7 +490,7 @@ class WebviewController extends Controller
 
         // xóa wishlist
         $wishlist = Wishlist::where('user_id', $request['user_id'])->delete();
-    } 
+    }
 
     public function getCart(Request $request) {
         $status = $request->status;
@@ -521,7 +525,7 @@ class WebviewController extends Controller
                     array_push($arr, $params);
                 }
 
-                $voucher = 0; 
+                $voucher = 0;
                 if ($voucherData) {
                     if ($sum > $voucherData->discount_amount) {
                         $voucher = $voucherData->discount_amount;
@@ -537,7 +541,7 @@ class WebviewController extends Controller
                     'order_time' => $or->order_time,
                     'voucher' => $voucher
                 ];
-                
+
                 array_push($arrayTotal, [$array['order'] = $dataOrder, $array['detail_order'] = $arr]);
             }
             return $this->responseSuccess( $arrayTotal);
@@ -548,7 +552,7 @@ class WebviewController extends Controller
         $wishlists = Product::select('cosmetics_product.*', 'cosmetics_wishlist.quantity as quantity')
             ->join('cosmetics_wishlist','cosmetics_wishlist.product_id','=','cosmetics_product.product_id')
             ->where('cosmetics_wishlist.user_id', $request)->orderBy('cosmetics_wishlist.wishlist_id','asc')->get();
-        
+
         foreach($wishlists as $pr) {
             $pr->product_image = env('APP_URL'). '/img/product/' . $pr->product_image;
         }
@@ -578,17 +582,15 @@ class WebviewController extends Controller
     }
 
     public function rating(Request $request) {
-        // $id = auth()->id;
-        $dataRate = array();
-        // $wishlists = DB::table('cosmetics_product')
-        //     ->join('user','user.id','=','cosmetics_rate.user_id')
-        //     ->orderByRaw("CASE WHEN user.id  = 'Male' then 1 WHEN gender  = 'Female' then 2 WHEN gender  = 'Others' then 3  Else 4 END DESC")->get();
+         $user = $request->header('user_id');
+         $rate = DB::table('cosmetics_rate')
+             ->where('cosmetics_rate.product_id', $request->product_id)
+             ->orderByRaw("CASE WHEN cosmetics_rate.user_id = '$user' then 1 END DESC")
+             ->paginate(5);
 
-
-
-        $rating = Rate::where('product_id', $request->product_id)->paginate(2);
-        $rating->getCollection()->transform(function ($value) {
+        $rate->getCollection()->transform(function ($value) {
             $user = User::where('id', $value->user_id)->first();
+
             return $params = [
                 'rate_id' => $value->rate_id,
                 'user_id' => $value->user_id,
@@ -599,6 +601,32 @@ class WebviewController extends Controller
                 'image' => env('APP_URL'). '/img/user/' . $user->image
             ];
         });
-        return $this->responseSuccess($rating);
+        return $this->responseSuccess($rate);
+    }
+
+    public function  comment(Request $request) {
+        $user = $request->header('user_id');
+        if ($request->value && $user) {
+            $params = [
+                "parent_id" => 0,
+                "user_id" => $user,
+                "product_id" => $request->product_id,
+                "content" => $request->value,
+            ];
+
+            $createComment = ProductComment::create($params);
+        }
+        $comment = ProductComment::where('product_id', $request->product_id)->orderBy('id', 'DESC')->paginate(2);
+        $comment->getCollection()->transform(function ($value) {
+            $user = User::where('id', $value->user_id)->first();
+
+            return $params = [
+                "author" => $user->name,
+                "avatar" => env('APP_URL'). '/img/user/' . $user->image,
+                "content" => $value->content,
+                "datetime" => $value->created_at
+            ];
+        });
+        return $this->responseSuccess($comment);
     }
 }
