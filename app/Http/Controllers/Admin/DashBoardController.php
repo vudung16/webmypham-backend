@@ -14,10 +14,11 @@ class DashBoardController extends Controller
         $start_date = CarBon::parse($request->start_date)->format('Y-m-d')." 00:00:00";
         $end_date = CarBon::parse($request->end_date)->format('Y-m-d')." 23:59:59";
         $distance = Carbon::parse($request->end_date)->diffInDays($request->start_date);
+        $distance_before = Carbon::parse($request->end_date)->diffInDays($request->start_date);
         if (CarBon::parse($request->start_date)->format('Y-m-d') == CarBon::parse($request->end_date)->format('Y-m-d')) {
-            $distance = 1;
+            $distance_before = 1;
         }
-        $before_date = Carbon::parse($request->start_date)->subDays($distance);
+        $before_date = Carbon::parse($request->start_date)->subDays($distance_before);
         
         $order_money_before = DB::table('cosmetics_order')->whereBetween('created_at', [$before_date,$start_date])->sum('order_total_money');
         $order_money_after = DB::table('cosmetics_order')->whereBetween('created_at', [$start_date,$end_date])->sum('order_total_money');
