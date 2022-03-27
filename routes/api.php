@@ -31,6 +31,7 @@ Route::post('check-voucher', 'App\Http\Controllers\Api\WebviewController@checkVo
 Route::post('category-product', 'App\Http\Controllers\Api\WebviewController@categoryProduct')->name('api.home.categoryproduct');
 Route::post('rating', 'App\Http\Controllers\Api\WebviewController@rating')->name('api.home.rating');
 Route::post('comment', 'App\Http\Controllers\Api\WebviewController@comment')->name('api.comment');
+// Route::post('dashboard', 'App\Http\Controllers\Admin\DashBoardController@dashboard')->name('api.dashboard');
 
 
 //Login
