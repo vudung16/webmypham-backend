@@ -20,8 +20,8 @@ class DashBoardController extends Controller
         }
         $before_date = Carbon::parse($request->start_date)->subDays($distance_before);
         
-        $order_money_before = DB::table('cosmetics_order')->whereBetween('created_at', [$before_date,$start_date])->sum('order_total_money');
-        $order_money_after = DB::table('cosmetics_order')->whereBetween('created_at', [$start_date,$end_date])->sum('order_total_money');
+        $order_money_before = DB::table('cosmetics_order')->whereBetween('created_at', [$before_date,$start_date])->where('action', 4)->sum('order_total_money');
+        $order_money_after = DB::table('cosmetics_order')->whereBetween('created_at', [$start_date,$end_date])->where('action', 4)->sum('order_total_money');
 
         $order_count_before = DB::table('cosmetics_order')->whereBetween('created_at', [$before_date,$start_date])->count();
         $order_count_after = DB::table('cosmetics_order')->whereBetween('created_at', [$start_date,$end_date])->count();
@@ -57,8 +57,8 @@ class DashBoardController extends Controller
         for($i = 0; $i <= $distance; $i++) {
             $date = Carbon::parse($request->start_date)->addDays($i)->format('d-m-Y');
             $dateformat = Carbon::parse($request->start_date)->addDays($i)->format('Y-m-d');
-            $order = Order::whereBetween('created_at', [$dateformat." 00:00:00", $dateformat." 23:59:59"])->where('action', 4)->sum('order_total_money');
-            $orderCount = Order::whereBetween('created_at', [$dateformat." 00:00:00", $dateformat." 23:59:59"])->where('action', 4)->count();
+            $order = Order::whereBetween('created_at', [$dateformat." 00:00:00", $dateformat." 23:59:59"])->whereIn('action', [1,2,3,4])->sum('order_total_money');
+            $orderCount = Order::whereBetween('created_at', [$dateformat." 00:00:00", $dateformat." 23:59:59"])->whereIn('action', [1,2,3,4])->count();
 
             array_push($arrDate, $date);
             array_push($dateOrder, $order);
