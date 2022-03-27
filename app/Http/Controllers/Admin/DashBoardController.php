@@ -23,8 +23,8 @@ class DashBoardController extends Controller
         $order_money_before = DB::table('cosmetics_order')->whereBetween('created_at', [$before_date,$start_date])->where('action', 4)->sum('order_total_money');
         $order_money_after = DB::table('cosmetics_order')->whereBetween('created_at', [$start_date,$end_date])->where('action', 4)->sum('order_total_money');
 
-        $order_count_before = DB::table('cosmetics_order')->whereBetween('created_at', [$before_date,$start_date])->count();
-        $order_count_after = DB::table('cosmetics_order')->whereBetween('created_at', [$start_date,$end_date])->count();
+        $order_count_before = DB::table('cosmetics_order')->whereBetween('created_at', [$before_date,$start_date])->whereIn('action', [1,2,3,4])->count();
+        $order_count_after = DB::table('cosmetics_order')->whereBetween('created_at', [$start_date,$end_date])->whereIn('action', [1,2,3,4])->count();
 
         $user_before = DB::table('users')->whereBetween('created_at', [$before_date,$start_date])->count();
         $user_after = DB::table('users')->whereBetween('created_at', [$start_date,$end_date])->count();
