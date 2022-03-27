@@ -57,7 +57,7 @@ class DashBoardController extends Controller
         for($i = 0; $i <= $distance; $i++) {
             $date = Carbon::parse($request->start_date)->addDays($i)->format('d-m-Y');
             $dateformat = Carbon::parse($request->start_date)->addDays($i)->format('Y-m-d');
-            $order = Order::whereBetween('created_at', [$dateformat." 00:00:00", $dateformat." 23:59:59"])->whereIn('action', [1,2,3,4])->sum('order_total_money');
+            $order = Order::whereBetween('created_at', [$dateformat." 00:00:00", $dateformat." 23:59:59"])->where('action', 4)->sum('order_total_money');
             $orderCount = Order::whereBetween('created_at', [$dateformat." 00:00:00", $dateformat." 23:59:59"])->whereIn('action', [1,2,3,4])->count();
 
             array_push($arrDate, $date);
