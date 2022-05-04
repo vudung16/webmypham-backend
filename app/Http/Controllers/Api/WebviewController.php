@@ -39,6 +39,7 @@ class WebviewController extends Controller
             $img = env('APP_URL'). '/img/slide/' . $sl->slide_image;
             array_push($array, $img);
         }
+        \Log::info(env('APP_URL'));
         return $this->responseSuccess(['slide' => $array, 'bannner' => $banner]);
     }
 
