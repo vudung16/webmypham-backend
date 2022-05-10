@@ -17,27 +17,33 @@ class DatabaseSeeder extends Seeder
         // data brand
         DB::table('cosmetics_brand')->insert([
             'brand_id' => 1,
-            'brand_name' => 'Thương hiệu 1'
+            'brand_name' => 'Thương hiệu 1',
+            'image' => 'image1.jpg',
         ]);
         DB::table('cosmetics_brand')->insert([
             'brand_id' => 2,
-            'brand_name' => 'Thương hiệu 2'
+            'brand_name' => 'Thương hiệu 2',
+            'image' => 'image1.jpg',
         ]);
         DB::table('cosmetics_brand')->insert([
             'brand_id' => 3,
-            'brand_name' => 'Thương hiệu 3'
+            'brand_name' => 'Thương hiệu 3',
+            'image' => 'image1.jpg',
         ]);
         DB::table('cosmetics_brand')->insert([
             'brand_id' => 4,
-            'brand_name' => 'Thương hiệu 4'
+            'brand_name' => 'Thương hiệu 4',
+            'image' => 'image1.jpg',
         ]);
         DB::table('cosmetics_brand')->insert([
             'brand_id' => 5,
-            'brand_name' => 'Thương hiệu 5'
+            'brand_name' => 'Thương hiệu 5',
+            'image' => 'image1.jpg',
         ]);
         DB::table('cosmetics_brand')->insert([
             'brand_id' => 6,
-            'brand_name' => 'Thương hiệu 6'
+            'brand_name' => 'Thương hiệu 6',
+            'image' => 'image1.jpg',
         ]);
 
         // data category

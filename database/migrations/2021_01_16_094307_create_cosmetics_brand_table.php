@@ -16,6 +16,7 @@ class CreateCosmeticsBrandTable extends Migration
         Schema::create('cosmetics_brand', function (Blueprint $table) {
             $table->bigIncrements('brand_id');
             $table->string('brand_name');
+            $table->string('image');
             $table->timestamps();
         });
     }
