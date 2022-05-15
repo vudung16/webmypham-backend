@@ -27,9 +27,22 @@ use Illuminate\Support\Facades\Route;
     });
     Route::group(['prefix' => 'voucher'], function(){
         Route::post('list', 'App\Http\Controllers\Admin\VoucherController@getVoucher')->name('admin.getVoucher');
+        Route::post('detail', 'App\Http\Controllers\Admin\VoucherController@detailVoucher')->name('admin.detailVoucher');
         Route::post('delete', 'App\Http\Controllers\Admin\VoucherController@deleteVoucher')->name('admin.deleteVoucher');
         Route::post('create', 'App\Http\Controllers\Admin\VoucherController@createVoucher')->name('admin.createVoucher');
         Route::post('update', 'App\Http\Controllers\Admin\VoucherController@updateVoucher')->name('admin.updateVoucher');
+    });
+    Route::group(['prefix' => 'product'], function(){
+        Route::post('list', 'App\Http\Controllers\Admin\ProductController@getProduct')->name('admin.getProduct');
+        Route::post('detail', 'App\Http\Controllers\Admin\ProductController@detailProduct')->name('admin.detailProduct');
+        Route::post('delete', 'App\Http\Controllers\Admin\ProductController@deleteProduct')->name('admin.deleteProduct');
+        Route::post('create', 'App\Http\Controllers\Admin\ProductController@createProduct')->name('admin.createProduct');
+        Route::post('update', 'App\Http\Controllers\Admin\ProductController@updateProduct')->name('admin.updateProduct');
+        Route::post('delete-image', 'App\Http\Controllers\Admin\ProductController@deleteImage')->name('admin.deleteImage');
+    });
+    Route::group(['prefix' => 'order'], function(){
+        Route::post('list', 'App\Http\Controllers\Admin\OrderController@getOrder')->name('admin.getOrder');
+        Route::post('detail', 'App\Http\Controllers\Admin\OrderController@detailOrder')->name('admin.detailOrder');
     });
 // });
 

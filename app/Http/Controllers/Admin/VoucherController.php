@@ -12,7 +12,6 @@ use Carbon\Carbon;
 class VoucherController extends Controller
 {
     public function getVoucher(Request $request) {
-        \Log::info($request->all());
         $search = $request->search;
         $start = $request->starts_at ? CarBon::parse($request->starts_at)->format('Y-m-d')." 00:00:00" : '';
         $end = $request->expires_at ? CarBon::parse($request->expires_at)->format('Y-m-d')." 23:59:59" : '';
@@ -32,5 +31,97 @@ class VoucherController extends Controller
         File::delete(public_path().'/img/voucher/'.Voucher::find($request->id)->image);
         Voucher::find($request->id)->delete();
         return $this->responseSuccess();
+    }
+    public function createVoucher(VoucherRequest $request) {
+        $validated = $request->validated();
+        if($request->hasFile('image')){
+            $filenameWithExt = $request->file('image')->getClientOriginalName();
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            $extension = $request->file('image')->getClientOriginalExtension();
+            $fileNameToStore= $filename.'_'.time().'.'.$extension;
+            $path = $request->file('image')->move('img/voucher/', $fileNameToStore);
+
+            $voucher = new Voucher;
+            $voucher->image = $fileNameToStore;
+            $voucher->name = $request->name;
+            $voucher->code = $request->code;
+            $voucher->description = $request->description;
+            $voucher->uses = 0;
+            $voucher->max_uses = $request->uses;
+            $voucher->max_uses_user = $request->user;
+            $voucher->minimum_order = $request->order;
+            $voucher->discount_amount = $request->discount;
+            $voucher->percentage = $request->precent;
+            $voucher->starts_at = CarBon::parse($request->start);
+            $voucher->expires_at = CarBon::parse($request->end);
+            $voucher->save();
+            $this->responseSuccess();
+        }  else {
+            $this->responseError('Có lỗi xảy ra');
+        }
+    }
+    public function updateVoucher(VoucherRequest $request) {
+        $validated = $request->validated();
+
+        $id = $request->id;
+        $imageOld = Voucher::find($id)->image;
+        $voucher = Voucher::find($id);
+        if($request->hasFile('image')){
+            $filenameWithExt = $request->file('image')->getClientOriginalName();
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            $extension = $request->file('image')->getClientOriginalExtension();
+            $fileNameToStore= $filename.'_'.time().'.'.$extension;
+            $path = $request->file('image')->move('img/voucher/', $fileNameToStore);
+            File::delete(public_path().'/img/voucher/'.$imageOld);
+
+            $voucher->image = $fileNameToStore;
+            $voucher->name = $request->name;
+            $voucher->code = $request->code;
+            $voucher->description = $request->description;
+            $voucher->max_uses = $request->uses;
+            $voucher->max_uses_user = $request->user;
+            $voucher->minimum_order = $request->order;
+            $voucher->discount_amount = $request->discount;
+            $voucher->percentage = $request->precent;
+            $voucher->starts_at = CarBon::parse($request->start);
+            $voucher->expires_at = CarBon::parse($request->end);
+            $voucher->save();
+            $this->responseSuccess();
+        }  else {
+            $voucher->name = $request->name;
+            $voucher->code = $request->code;
+            $voucher->description = $request->description;
+            $voucher->max_uses = $request->uses;
+            $voucher->max_uses_user = $request->user;
+            $voucher->minimum_order = $request->order;
+            $voucher->discount_amount = $request->discount;
+            $voucher->percentage = $request->precent;
+            $voucher->starts_at = CarBon::parse($request->start);
+            $voucher->expires_at = CarBon::parse($request->end);
+            $voucher->save();
+            $this->responseSuccess();
+        }
+    }
+    public function detailVoucher(Request $request) {
+        try {
+            $voucher = Voucher::find($request->id);
+            $params = [
+                'code' => $voucher->code,
+                'name' => $voucher->name,
+                'description' => $voucher->description,
+                'uses' => $voucher->max_uses,
+                'user' => $voucher->max_uses_user,
+                'order' => $voucher->minimum_order,
+                'discount' => $voucher->discount_amount,
+                'precent' => $voucher->percentage,
+                'start' => $voucher->starts_at,
+                'end' => $voucher->expires_at,
+            ];
+            $image = env('APP_URL'). '/img/voucher/' . $voucher->image;
+            return $this->responseSuccess(['info' => $params,'image' => $image ]);
+        } catch(\Throwable $th) {
+            \Log::info($th);
+            $this->responseError($th);
+        }
     }
 }

@@ -7,8 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Profile extends Model
 {
-    use HasFactory;
     public $table = "cosmetics_profile";
+    protected $fillable = ['order_id','name','email','phone','province_id','district_id','ward_id','note'];
     protected $primaryKey = 'id';
-    protected $guarded = [];  
+    // protected $guarded = [];  
+
+    public function order()
+    {
+        return $this->hasOne(Order::class, 'order_id', 'id');
+    }
 }

@@ -4,10 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Profile;
 
 class Order extends Model
 { 
 	protected $fillable = ['user_id','code','voucher_id','order_time','order_total_money','profile_id','action','is_payment'];
     public $table = "cosmetics_order";
     protected $primaryKey = 'order_id';
+
+    public function profile() {
+    	return $this->belongsTo('App\Models\Profile','order_id', 'order_id');
+    }
 }
