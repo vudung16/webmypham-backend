@@ -20,23 +20,23 @@ class DashBoardController extends Controller
         }
         $before_date = Carbon::parse($request->start_date)->subDays($distance_before);
         
-        $order_money_before = DB::table('cosmetics_order')->whereBetween('created_at', [$before_date,$start_date])->where('action', 4)->sum('order_total_money');
-        $order_money_after = DB::table('cosmetics_order')->whereBetween('created_at', [$start_date,$end_date])->where('action', 4)->sum('order_total_money');
+        $order_money_before = DB::table('order')->whereBetween('created_at', [$before_date,$start_date])->where('action', 4)->sum('order_total_money');
+        $order_money_after = DB::table('order')->whereBetween('created_at', [$start_date,$end_date])->where('action', 4)->sum('order_total_money');
 
-        $order_count_before = DB::table('cosmetics_order')->whereBetween('created_at', [$before_date,$start_date])->whereIn('action', [1,2,3,4])->count();
-        $order_count_after = DB::table('cosmetics_order')->whereBetween('created_at', [$start_date,$end_date])->whereIn('action', [1,2,3,4])->count();
+        $order_count_before = DB::table('order')->whereBetween('created_at', [$before_date,$start_date])->whereIn('action', [1,2,3,4])->count();
+        $order_count_after = DB::table('order')->whereBetween('created_at', [$start_date,$end_date])->whereIn('action', [1,2,3,4])->count();
 
         $user_before = DB::table('users')->whereBetween('created_at', [$before_date,$start_date])->count();
         $user_after = DB::table('users')->whereBetween('created_at', [$start_date,$end_date])->count();
 
-        $rate_before = DB::table('cosmetics_rate')->whereBetween('created_at', [$before_date,$start_date])->count();
-        $rate_after = DB::table('cosmetics_rate')->whereBetween('created_at', [$start_date,$end_date])->count();
+        $rate_before = DB::table('rate')->whereBetween('created_at', [$before_date,$start_date])->count();
+        $rate_after = DB::table('rate')->whereBetween('created_at', [$start_date,$end_date])->count();
 
-        $rateValue1 = DB::table('cosmetics_rate')->whereBetween('created_at', [$start_date,$end_date])->where('rate_scores', 1)->count();
-        $rateValue2 = DB::table('cosmetics_rate')->whereBetween('created_at', [$start_date,$end_date])->where('rate_scores', 2)->count();
-        $rateValue3 = DB::table('cosmetics_rate')->whereBetween('created_at', [$start_date,$end_date])->where('rate_scores', 3)->count();
-        $rateValue4 = DB::table('cosmetics_rate')->whereBetween('created_at', [$start_date,$end_date])->where('rate_scores', 4)->count();
-        $rateValue5 = DB::table('cosmetics_rate')->whereBetween('created_at', [$start_date,$end_date])->where('rate_scores', 5)->count();
+        $rateValue1 = DB::table('rate')->whereBetween('created_at', [$start_date,$end_date])->where('rate_scores', 1)->count();
+        $rateValue2 = DB::table('rate')->whereBetween('created_at', [$start_date,$end_date])->where('rate_scores', 2)->count();
+        $rateValue3 = DB::table('rate')->whereBetween('created_at', [$start_date,$end_date])->where('rate_scores', 3)->count();
+        $rateValue4 = DB::table('rate')->whereBetween('created_at', [$start_date,$end_date])->where('rate_scores', 4)->count();
+        $rateValue5 = DB::table('rate')->whereBetween('created_at', [$start_date,$end_date])->where('rate_scores', 5)->count();
         $rateValueParams = [$rateValue1,$rateValue2,$rateValue3,$rateValue4,$rateValue5];
         
 

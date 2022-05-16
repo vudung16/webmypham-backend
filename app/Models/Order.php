@@ -9,8 +9,8 @@ use App\Models\Profile;
 class Order extends Model
 { 
 	protected $fillable = ['user_id','code','voucher_id','order_time','order_total_money','profile_id','action','is_payment'];
-    public $table = "cosmetics_order";
-    protected $primaryKey = 'order_id';
+    public $table = "order";
+    protected $primaryKey = 'id';
 
     public function profile() {
     	return $this->belongsTo('App\Models\Profile','order_id', 'order_id');

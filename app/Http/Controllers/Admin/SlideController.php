@@ -12,14 +12,14 @@ use Carbon\Carbon;
 class SlideController extends Controller
 {
     public function getSlide(Request $request) {
-        $slide = Slide::where('slide_status', $request->status)->orderBy('slide_id', 'DESC')->paginate(10);
+        $slide = Slide::where('status', $request->status)->orderBy('id', 'DESC')->paginate(10);
         if ($slide) {
             $slide->getCollection()->transform(function ($value) {
 
                 return $params = [
-                    'slide_id' => $value->slide_id,
-                    'slide_status' => $value->slide_status,
-                    'slide_image' => env('APP_URL') . '/img/slide/' . $value->slide_image,
+                    'slide_id' => $value->id,
+                    'slide_status' => $value->status,
+                    'slide_image' => env('APP_URL') . '/img/slide/' . $value->image,
                     'created_at' => $value->created_at,
                     'updated_at' => $value->updated_at
                 ];
@@ -28,7 +28,7 @@ class SlideController extends Controller
         return $this->responseSuccess($slide);
     }
     public function deleteSlide(Request $request) {
-        File::delete(public_path().'/img/slide/'.Slide::find($request->id)->slide_image);
+        File::delete(public_path().'/img/slide/'.Slide::find($request->id)->image);
         Slide::find($request->id)->delete();
         return $this->responseSuccess();
     }
@@ -42,18 +42,18 @@ class SlideController extends Controller
             $path = $request->file('image')->move('img/slide/', $fileNameToStore);
 
             $slide = new Slide;
-            $slide->slide_image = $fileNameToStore;
-            $slide->slide_status = $request->status === 'true' ? 1 : 0;
+            $slide->image = $fileNameToStore;
+            $slide->status = $request->status === 'true' ? 1 : 0;
             $slide->save();
-            $this->responseSuccess();
+            return $this->responseSuccess();
         }  else {
-            $this->responseError('Có lỗi xảy ra');
+            return $this->responseError('Có lỗi xảy ra');
         }
     }
     public function updateSlide(SlideRequest $request) {
         $validated = $request->validated();
         $slide_id = $request->slide_id;
-        $imageOld = Slide::find($slide_id)->slide_image;
+        $imageOld = Slide::find($slide_id)->image;
 
         if($request->hasFile('image')){
             $filenameWithExt = $request->file('image')->getClientOriginalName();
@@ -63,18 +63,18 @@ class SlideController extends Controller
             $path = $request->file('image')->move('img/slide/', $fileNameToStore);
             File::delete(public_path().'/img/slide/'.$imageOld);
 
-            Slide::where('slide_id',$slide_id)->update([
-                'slide_image'=> $fileNameToStore,
-                'slide_status'=>$request->status === 'true' ? 1 : 0 ,
+            Slide::where('id',$slide_id)->update([
+                'image'=> $fileNameToStore,
+                'status'=>$request->status === 'true' ? 1 : 0 ,
             ]);
-            $this->responseSuccess();
+            return $this->responseSuccess();
 
         }   
         else {
-            Slide::where('slide_id',$slide_id)->update([
-                'slide_status'=>$request->status === 'true' ? 1 : 0 ,
+            Slide::where('id',$slide_id)->update([
+                'status'=>$request->status === 'true' ? 1 : 0 ,
             ]);
-            $this->responseSuccess();
+            return $this->responseSuccess();
         }
     }
 }

@@ -10,6 +10,6 @@ class Order_detail extends Model
 
     // use HasFactory;
     protected $fillable = ['order_id','product_id','quantity','detail_amount'];
-    public $table = "cosmetics_order_detail";
-    protected $primaryKey = 'order_detail_id';
+    public $table = "order_detail";
+    protected $primaryKey = 'id';
 }

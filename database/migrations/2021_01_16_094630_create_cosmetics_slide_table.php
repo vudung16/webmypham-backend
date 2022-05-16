@@ -13,10 +13,10 @@ class CreateCosmeticsSlideTable extends Migration
      */
     public function up()
     {
-        Schema::create('cosmetics_slide', function (Blueprint $table) {
-            $table->bigIncrements('slide_id');
-            $table->string('slide_image')->nullable();
-            $table->boolean('slide_status')->nullable();
+        Schema::create('slide', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('image')->nullable();
+            $table->boolean('status')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateCosmeticsSlideTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cosmetics_slide');
+        Schema::dropIfExists('slide');
     }
 }

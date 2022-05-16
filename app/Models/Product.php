@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    public $table = "cosmetics_product";
-    protected $primaryKey = 'product_id';
+    public $table = "product";
+    protected $primaryKey = 'id';
 
-    public function cosmetics_rate() {
-    	return $this->hasMany('App\Models\Rate','product_id','product_id');
+    public function rate() {
+    	return $this->hasMany('App\Models\Rate','product_id','id');
     }
 }

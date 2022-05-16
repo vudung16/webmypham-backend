@@ -30,41 +30,40 @@ use JWTAuth;
 class WebviewController extends Controller
 {
     public function homeSlide() {
-        $slide = Slide::where(['slide_status'=> 1])->orderBy('slide_id', 'DESC')->limit(3)->get();
-        $banner = Slide::where(['slide_status'=> 0])->orderBy('slide_id', 'DESC')->limit(4)->get();
+        $slide = Slide::where(['status'=> 1])->orderBy('id', 'DESC')->limit(3)->get();
+        $banner = Slide::where(['status'=> 0])->orderBy('id', 'DESC')->limit(4)->get();
 
         $array = [];
         $img = '';
         foreach($slide as $sl) {
-            $img = env('APP_URL'). '/img/slide/' . $sl->slide_image;
+            $img = env('APP_URL'). '/img/slide/' . $sl->image;
             array_push($array, $img);
         }
-        \Log::info(env('APP_URL'));
         return $this->responseSuccess(['slide' => $array, 'bannner' => $banner]);
     }
 
     public function homeProduct() {
-        $product = Product::orderBy('product_id', 'DESC')->limit(10)->get();
+        $product = Product::orderBy('id', 'DESC')->limit(10)->get();
         foreach($product as $pr) {
-            $pr->product_image = env('APP_URL'). '/img/product/' . $pr->product_image;
+            $pr->image = env('APP_URL'). '/img/product/' . $pr->image;
         }
 
         return $this->responseSuccess(['product' => $product]);
     }
 
     public function productDiscount() {
-        $productDiscount = Product::whereNotNull('product_discount')->orderBy('product_id', 'DESC')->limit(10)->get();
+        $productDiscount = Product::whereNotNull('discount')->orderBy('id', 'DESC')->limit(10)->get();
         foreach($productDiscount as $pr) {
-            $pr->product_image = env('APP_URL'). '/img/product/' . $pr->product_image;
+            $pr->image = env('APP_URL'). '/img/product/' . $pr->image;
         }
 
         return $this->responseSuccess(['productDiscount' => $productDiscount]);
     }
 
     public function productSelling() {
-        $productSelling = Product::orderBy('product_selling', 'DESC')->limit(10)->get();
+        $productSelling = Product::orderBy('selling', 'DESC')->limit(10)->get();
         foreach($productSelling as $pr) {
-            $pr->product_image = env('APP_URL'). '/img/product/' . $pr->product_image;
+            $pr->image = env('APP_URL'). '/img/product/' . $pr->image;
         }
 
         return $this->responseSuccess(['productSelling' => $productSelling]);
@@ -84,15 +83,15 @@ class WebviewController extends Controller
 
     public function productDetail(Request $request) {
         $product = Product::findOrFail($request->id);
-        $product->product_image = env('APP_URL'). '/img/product/' . $product->product_image;
+        $product->image = env('APP_URL'). '/img/product/' . $product->image;
 
-        $brand = Brand::where('brand_id', $product->brand_id)->first();
+        $brand = Brand::where('id', $product->brand_id)->first();
         $image = Productimage::where('product_id', $request->id)->get();
-        $category = Category::where('category_id', $product->category_id)->first();
+        $category = Category::where('id', $product->category_id)->first();
         $rate = Rate::where('product_id', $product->product_id)->avg('rate_scores');
 
         $arr_img = [];
-        array_push($arr_img, $product->product_image);
+        array_push($arr_img, $product->image);
         foreach($image as $img) {
             $img->product_image_name = env('APP_URL'). '/img/product_image/'.$img->product_image_name;
             array_push($arr_img, $img->product_image_name);
@@ -101,10 +100,10 @@ class WebviewController extends Controller
         // \Log::info($rate);
 
         $params = [
-            'brand' => $brand->brand_name,
+            'brand' => $brand->name,
             'product' => $product,
             'product_image' => $arr_img,
-            'category' => ['name' => $category->category_name, 'id' => $category->category_id],
+            'category' => ['name' => $category->name, 'id' => $category->id],
             'rate' => $rate
         ];
 
@@ -121,7 +120,7 @@ class WebviewController extends Controller
             if ($request->type === 'delete') {
                 $order = Order::where('user_id', $request->user_id)->whereNull('action')->first();
                 $wishlist = Wishlist::where('product_id', $request->product_id)->where('user_id', $request->user_id)->first();
-                $orderDetail = Order_Detail::where('product_id', $request->product_id)->where('order_id', $order->order_id)->first();
+                $orderDetail = Order_Detail::where('product_id', $request->product_id)->where('order_id', $order->id)->first();
 
                 $wishlist->delete();
                 $orderDetail->delete();
@@ -198,10 +197,10 @@ class WebviewController extends Controller
                     try {
                         $order1 = Order::create($orderData1);
                         $productOrderDetail = [
-                            'order_id' => $order1->order_id,
+                            'order_id' => $order1->id,
                             'product_id' => $request->product_id,
                             'quantity' => $wishlist->quantity,
-                            'detail_amount' => !is_null($product->product_discount) ? ($product->product_price - (($product->product_discount /100) * $product->product_price)) * $wishlist->quantity : $product->product_price * $wishlist->quantity
+                            'detail_amount' => !is_null($product->discount) ? ($product->price - (($product->discount /100) * $product->price)) * $wishlist->quantity : $product->price * $wishlist->quantity
                         ];
                         $orderDetail = Order_detail::create($productOrderDetail);
                     } catch (\Throwable $th) {
@@ -211,16 +210,16 @@ class WebviewController extends Controller
                 } else {
                     //trường hợp tồn tại order và product
                     $order1 = Order::where('user_id', $request->user_id)->whereNull('action')->first();
-                    $orderDetail = Order_detail::where('product_id', $request->product_id)->where('order_id', $order1->order_id)->first();
+                    $orderDetail = Order_detail::where('product_id', $request->product_id)->where('order_id', $order1->id)->first();
                     $wishlist = Wishlist::where('product_id', $request->product_id)->first();
 
                     try{
                         if(!$orderDetail) {
                             $productOrderDetail = [
-                                'order_id' => $order->order_id,
-                                'product_id' => $product->product_id,
+                                'order_id' => $order->id,
+                                'product_id' => $product->id,
                                 'quantity' => $wishlist->quantity,
-                                'detail_amount' => !is_null($product->product_discount) ? $product->product_price - (($product->product_discount /100) * $product->product_price) * $wishlist->quantity : $product->product_price * $wishlist->quantity,
+                                'detail_amount' => !is_null($product->discount) ? $product->price - (($product->discount /100) * $product->price) * $wishlist->quantity : $product->price * $wishlist->quantity,
                             ];
                             $orderDetail = Order_detail::create($productOrderDetail);
                         } else {
@@ -229,7 +228,7 @@ class WebviewController extends Controller
                             } else {
                                 $orderDetail->quantity += $request->quantity;
                             }
-                            $orderDetail->detail_amount = !is_null($product->product_discount) ? ($product->product_price - (($product->product_discount /100) * $product->product_price)) * $wishlist->quantity : $product->product_price * $wishlist->quantity;
+                            $orderDetail->detail_amount = !is_null($product->discount) ? ($product->price - (($product->discount /100) * $product->price)) * $wishlist->quantity : $product->price * $wishlist->quantity;
                             $orderDetail->save();
                         }
                     } catch(\Throwable $th) {
@@ -407,39 +406,38 @@ class WebviewController extends Controller
         $orderby = '';
         $valueOrder = '';
         if($request->arrange[0] === 'az') {
-            $orderby = 'product_name';
+            $orderby = 'name';
             $valueOrder = 'asc';
         } else if ($request->arrange[0] === 'za') {
-            $orderby = 'product_name';
+            $orderby = 'name';
             $valueOrder = 'desc';
         } else if ($request->arrange[0] === 'plus') {
-            $orderby = 'product_price';
+            $orderby = 'price';
             $valueOrder = 'asc';
         }else if ($request->arrange[0] === 'reduction') {
-            $orderby = 'product_price';
+            $orderby = 'price';
             $valueOrder = 'desc';
         }
         $search = $request->search;
-        $category = $request->category_id;
-
-        $product = DB::table('cosmetics_product')
+        $category = $request->id;
+        $product = DB::table('product')
                     ->when(isset($search), function ($query) use ($search) {
-                        return $query->where('product_name', 'like', "%$search%");
+                        return $query->where('name', 'like', "%$search%");
                     })
                     ->when(isset($category), function ($query) use ($category) {
                         return $query->where('category_id', 'like', "%$category%");
                     })
-                    ->whereBetween('product_price', [$request->total[0],$request->total[1]])
+                    ->whereBetween('price', [$request->total[0],$request->total[1]])
                     ->whereIn('brand_id', $request->brand)
                     ->orderBy($orderby, $valueOrder)
                     ->limit(10)
                     ->get();
         foreach($product as $pr) {
-            $pr->product_image = env('APP_URL'). '/img/product/' . $pr->product_image;
+            $pr->image = env('APP_URL'). '/img/product/' . $pr->image;
         }
         $dataCategory='';
         if($category) {
-            $dataCategory = Category::where('category_id', $request->category_id)->first();
+            $dataCategory = Category::where('id', $request->category_id)->first();
         }
 
         return $this->responseSuccess(['product' => $product, 'category' => $dataCategory]);
@@ -462,7 +460,7 @@ class WebviewController extends Controller
 
         //lưu thông tin vận chuyển
         $paramsInfo = [
-            'order_id' => $order->order_id,
+            'order_id' => $order->id,
             'name' => $request['name'],
             'phone' => $request['phone'],
             'email' => $request['email'],
@@ -511,17 +509,17 @@ class WebviewController extends Controller
                 $voucherData = Voucher::where('id', $or->voucher_id)->first();
                 $arr = [];
                 $sum = 0;
-                $detail = Order_detail::where('order_id', $or->order_id)->get();
+                $detail = Order_detail::where('order_id', $or->id)->get();
                 foreach($detail as $dt) {
-                    $product = Product::where('product_id',$dt->product_id)->first();
+                    $product = Product::where('id',$dt->product_id)->first();
                     $sum = $sum + $dt->detail_amount;
                     $params = [
-                        'order_detail_id' => $dt->order_detail_id,
+                        'order_detail_id' => $dt->id,
                         'quantity' => $dt->quantity,
                         'detail_amount' => $dt->detail_amount,
-                        'product_id' => $product->product_id,
-                        'product_name' => $product->product_name,
-                        'product_image' => env('APP_URL'). '/img/product/' . $product->product_image,
+                        'product_id' => $product->id,
+                        'product_name' => $product->name,
+                        'product_image' => env('APP_URL'). '/img/product/' . $product->image,
                     ];
                     array_push($arr, $params);
                 }
@@ -550,12 +548,12 @@ class WebviewController extends Controller
     }
 
     public function getCartOrder($request) {
-        $wishlists = Product::select('cosmetics_product.*', 'cosmetics_wishlist.quantity as quantity')
-            ->join('cosmetics_wishlist','cosmetics_wishlist.product_id','=','cosmetics_product.product_id')
-            ->where('cosmetics_wishlist.user_id', $request)->orderBy('cosmetics_wishlist.wishlist_id','asc')->get();
+        $wishlists = Product::select('product.*', 'wishlist.quantity as quantity')
+            ->join('wishlist','wishlist.product_id','=','product.id')
+            ->where('wishlist.user_id', $request)->orderBy('wishlist.id','asc')->get();
 
         foreach($wishlists as $pr) {
-            $pr->product_image = env('APP_URL'). '/img/product/' . $pr->product_image;
+            $pr->image = env('APP_URL'). '/img/product/' . $pr->image;
         }
 
         $sum_quantity = 0;
@@ -566,10 +564,10 @@ class WebviewController extends Controller
         }
         $sum_price = 0;
         foreach($wishlists as $key=>$value){
-            if(isset($value->product_discount)) {
-                $sum_price += ($value->product_price - (($value->product_discount /100) * $value->product_price)) * $value->quantity;
+            if(isset($value->discount)) {
+                $sum_price += ($value->price - (($value->discount /100) * $value->price)) * $value->quantity;
             } else {
-                $sum_price += $value->product_discount;
+                $sum_price += $value->discount;
             }
         }
 
@@ -584,16 +582,16 @@ class WebviewController extends Controller
 
     public function rating(Request $request) {
          $user = $request->header('user_id');
-         $rate = DB::table('cosmetics_rate')
-             ->where('cosmetics_rate.product_id', $request->product_id)
-             ->orderByRaw("CASE WHEN cosmetics_rate.user_id = '$user' then 1 END DESC")
+         $rate = DB::table('rate')
+             ->where('rate.product_id', $request->product_id)
+             ->orderByRaw("CASE WHEN rate.user_id = '$user' then 1 END DESC")
              ->paginate(5);
         if ($rate['data']) {
             $rate->getCollection()->transform(function ($value) {
                 $user = User::where('id', $value->user_id)->first();
 
                 return $params = [
-                    'rate_id' => $value->rate_id,
+                    'rate_id' => $value->id,
                     'user_id' => $value->user_id,
                     'rate_scores' => $value->rate_scores,
                     'rate_comment' => $value->rate_comment,

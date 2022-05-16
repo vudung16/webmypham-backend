@@ -8,11 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class ProductComment extends Model
 {
     use HasFactory;
-    protected $table = "cosmetics_product_comment";
+    protected $table = "product_comment";
     protected $fillable = ['parent_id','user_id','product_id','content'];
 
     public function product() {
-    	return $this->belongsTo('App\Models\Product','product_id','product_id');
+    	return $this->belongsTo('App\Models\Product','id','product_id');
     }
 
     public function User() {

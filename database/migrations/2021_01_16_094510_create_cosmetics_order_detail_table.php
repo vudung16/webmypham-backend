@@ -13,8 +13,8 @@ class CreateCosmeticsOrderDetailTable extends Migration
      */
     public function up()
     {
-        Schema::create('cosmetics_order_detail', function (Blueprint $table) {
-            $table->bigIncrements('order_detail_id');
+        Schema::create('order_detail', function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->integer('product_id');
             $table->unsignedBigInteger('order_id');
             $table->integer('quantity');
@@ -30,6 +30,6 @@ class CreateCosmeticsOrderDetailTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cosmetics_order_detail');
+        Schema::dropIfExists('order_detail');
     }
 }

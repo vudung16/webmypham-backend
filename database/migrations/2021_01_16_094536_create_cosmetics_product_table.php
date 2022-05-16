@@ -13,19 +13,19 @@ class CreateCosmeticsProductTable extends Migration
      */
     public function up()
     {
-        Schema::create('cosmetics_product', function (Blueprint $table) {
-            $table->bigIncrements('product_id');
-            $table->string('product_name');
-            $table->string('product_description');
-            $table->longText('product_content');
-            $table->string('product_image');
-            $table->double('product_price');
-            $table->integer('product_discount')->nullable();
-            $table->integer('product_width');
-            $table->integer('product_height');
-            $table->integer('product_length');
-            $table->integer('product_weight');
-            $table->integer('product_selling');
+        Schema::create('product', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('name');
+            $table->string('description');
+            $table->longText('content');
+            $table->string('image');
+            $table->double('price');
+            $table->integer('discount')->nullable();
+            $table->integer('width');
+            $table->integer('height');
+            $table->integer('length');
+            $table->integer('weight');
+            $table->integer('selling');
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('brand_id');
             $table->timestamps();
@@ -39,6 +39,6 @@ class CreateCosmeticsProductTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cosmetics_product');
+        Schema::dropIfExists('product');
     }
 }

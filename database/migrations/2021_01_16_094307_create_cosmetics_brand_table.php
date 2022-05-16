@@ -13,9 +13,9 @@ class CreateCosmeticsBrandTable extends Migration
      */
     public function up()
     {
-        Schema::create('cosmetics_brand', function (Blueprint $table) {
-            $table->bigIncrements('brand_id');
-            $table->string('brand_name');
+        Schema::create('brand', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('name');
             $table->string('image');
             $table->timestamps();
         });
@@ -28,6 +28,6 @@ class CreateCosmeticsBrandTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cosmetics_brand');
+        Schema::dropIfExists('brand');
     }
 }

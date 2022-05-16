@@ -13,7 +13,7 @@ class CreateCosmeticsProductImageTable extends Migration
      */
     public function up()
     {
-        Schema::create('cosmetics_product_image', function (Blueprint $table) {
+        Schema::create('product_image', function (Blueprint $table) {
             $table->bigIncrements('product_image_id');
             $table->unsignedBigInteger('product_id');
             $table->string('product_image_name');
@@ -28,6 +28,6 @@ class CreateCosmeticsProductImageTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cosmetics_product_image');
+        Schema::dropIfExists('product_image');
     }
 }

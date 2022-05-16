@@ -13,7 +13,7 @@ class CosmeticsVouchers extends Migration
      */
     public function up()
     {
-        Schema::create('cosmetics_vouchers', function ( Blueprint $table ) {
+        Schema::create('vouchers', function ( Blueprint $table ) {
             $table->bigIncrements('id');
             
             // The voucher code
@@ -62,6 +62,6 @@ class CosmeticsVouchers extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cosmetics_vouchers');
+        Schema::dropIfExists('vouchers');
     }
 }

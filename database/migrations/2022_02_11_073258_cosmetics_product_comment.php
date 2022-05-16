@@ -13,7 +13,7 @@ class CosmeticsProductComment extends Migration
      */
     public function up()
     {
-        Schema::create('cosmetics_product_comment', function (Blueprint $table) {
+        Schema::create('product_comment', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('parent_id');
             $table->unsignedBigInteger('user_id');
@@ -30,6 +30,6 @@ class CosmeticsProductComment extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cosmetics_product_comment');
+        Schema::dropIfExists('product_comment');
     }
 }

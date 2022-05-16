@@ -13,9 +13,9 @@ class CreateCosmeticsCategoryTable extends Migration
      */
     public function up()
     {
-        Schema::create('cosmetics_category', function (Blueprint $table) {
-            $table->bigIncrements('category_id');
-            $table->string('category_name');
+        Schema::create('category', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('name');
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ class CreateCosmeticsCategoryTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cosmetics_category');
+        Schema::dropIfExists('category');
     }
 }

@@ -14,13 +14,13 @@ class BrandController extends Controller
 {
     public function getBrand(Request $request) {
         $search = $request->search;
-        $brand = Brand::where('brand_name', 'like', "%$search%")->orderBy('brand_id', 'DESC')->paginate(10);
+        $brand = Brand::where('name', 'like', "%$search%")->orderBy('id', 'DESC')->paginate(10);
         if ($brand) {
             $brand->getCollection()->transform(function ($value) {
 
                 return $params = [
-                    'id' => $value->brand_id,
-                    'name' => $value->brand_name,
+                    'id' => $value->id,
+                    'name' => $value->name,
                     'image' => env('APP_URL') . '/img/brand/' . $value->image,
                 ];
             });
@@ -43,11 +43,11 @@ class BrandController extends Controller
 
             $brand = new Brand;
             $brand->image = $fileNameToStore;
-            $brand->brand_name = $request->name;
+            $brand->name = $request->name;
             $brand->save();
-            $this->responseSuccess();
+            return $this->responseSuccess();
         }  else {
-            $this->responseError('Có lỗi xảy ra');
+            return $this->responseError('Có lỗi xảy ra');
         }
     }
     public function updateBrand(BrandRequest $request) {
@@ -64,18 +64,18 @@ class BrandController extends Controller
             $path = $request->file('image')->move('img/brand/', $fileNameToStore);
             File::delete(public_path().'/img/brand/'.$imageOld);
 
-            Brand::where('brand_id',$brand_id)->update([
+            Brand::where('id',$brand_id)->update([
                 'image'=> $fileNameToStore,
-                'brand_name'=>$request->name,
+                'name'=>$request->name,
             ]);
-            $this->responseSuccess();
+            return $this->responseSuccess();
 
         }   
         else {
-            Brand::where('brand_id',$brand_id)->update([
-                'brand_name'=>$request->name,
+            Brand::where('id',$brand_id)->update([
+                'name'=>$request->name,
             ]);
-            $this->responseSuccess();
+            return $this->responseSuccess();
         }
     }
 }

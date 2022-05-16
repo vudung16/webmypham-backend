@@ -16,19 +16,19 @@ class ProductController extends Controller
         $search = $request->search;
         $brand = $request->brand;
         $category = $request->category;
-        $product = Product::where('product_name', 'like', "%$search%")
+        $product = Product::where('name', 'like', "%$search%")
         ->where('brand_id', 'like', "%$brand%")
         ->where('category_id', 'like', "%$category%")
-        ->orderBy('product_id', 'DESC')->paginate(10);
+        ->orderBy('id', 'DESC')->paginate(10);
         if ($product) {
             $product->getCollection()->transform(function ($value) {
                 return $params = [
-                    'id' => $value->product_id,
-                    'name' => $value->product_name,
-                    'image' => env('APP_URL') . '/img/product/' . $value->product_image,
-                    'price' => $value->product_price,
-                    'discount' => $value->product_discount,
-                    'selling' => $value->product_selling
+                    'id' => $value->id,
+                    'name' => $value->name,
+                    'image' => env('APP_URL') . '/img/product/' . $value->image,
+                    'price' => $value->price,
+                    'discount' => $value->discount,
+                    'selling' => $value->selling
                 ];
             });
         }
@@ -49,19 +49,19 @@ class ProductController extends Controller
             $path = $request->file('image')->move('img/product/', $fileNameToStore);
 
             $product = new Product;
-            $product->product_image = $fileNameToStore;
-            $product->product_name = $request->name;
-            $product->product_content = $request->content;
-            $product->product_description = $request->description;
-            $product->product_price = $request->price;
-            $product->product_width = $request->width;
-            $product->product_height = $request->height;
-            $product->product_length = $request->length;
-            $product->product_discount = $request->discount;
-            $product->product_weight = $request->weight;
+            $product->image = $fileNameToStore;
+            $product->name = $request->name;
+            $product->content = $request->content;
+            $product->description = $request->description;
+            $product->price = $request->price;
+            $product->width = $request->width;
+            $product->height = $request->height;
+            $product->length = $request->length;
+            $product->discount = $request->discount;
+            $product->weight = $request->weight;
             $product->brand_id = $request->brand;
             $product->category_id = $request->category;
-            $product->product_selling = 0;
+            $product->selling = 0;
             $product->save();
 
             if ($request->hasFile('fileList')) {
@@ -74,14 +74,14 @@ class ProductController extends Controller
                     $path = $image->move('img/product_image/', $fileNameToStore); 
 
                     $product_image = new Productimage;
-                    $product_image->product_id = $product->product_id;
+                    $product_image->product_id = $product->id;
                     $product_image->product_image_name = $fileNameToStore;
                     $product_image->save();
                 }
             }
-            $this->responseSuccess();
+            return $this->responseSuccess();
         }  else {
-            $this->responseError('Có lỗi xảy ra');
+            return $this->responseError('Có lỗi xảy ra');
         }
     }
     public function updateProduct(ProductRequest $request) {
@@ -98,19 +98,19 @@ class ProductController extends Controller
             $path = $request->file('image')->move('img/product/', $fileNameToStore);
             File::delete(public_path().'/img/product/'.$imageOld);
 
-            $product->product_image = $fileNameToStore;
-            $product->product_name = $request->name;
-            $product->product_content = $request->content;
-            $product->product_description = $request->description;
-            $product->product_price = $request->price;
-            $product->product_width = $request->width;
-            $product->product_height = $request->height;
-            $product->product_length = $request->length;
-            $product->product_discount = $request->discount;
-            $product->product_weight = $request->weight;
+            $product->image = $fileNameToStore;
+            $product->name = $request->name;
+            $product->content = $request->content;
+            $product->description = $request->description;
+            $product->price = $request->price;
+            $product->width = $request->width;
+            $product->height = $request->height;
+            $product->length = $request->length;
+            $product->discount = $request->discount;
+            $product->weight = $request->weight;
             $product->brand_id = $request->brand;
             $product->category_id = $request->category;
-            $product->product_selling = 0;
+            $product->selling = 0;
             $product->save();
 
             if ($request->hasFile('fileList')) {
@@ -123,25 +123,25 @@ class ProductController extends Controller
                     $path = $image->move('img/product_image/', $fileNameToStore); 
 
                     $product_image = new Productimage;
-                    $product_image->product_id = $product->product_id;
+                    $product_image->product_id = $product->id;
                     $product_image->product_image_name = $fileNameToStore;
                     $product_image->save();
                 }
             }
-            $this->responseSuccess();
+            return $this->responseSuccess();
         }  else {
-            $product->product_name = $request->name;
-            $product->product_content = $request->content;
-            $product->product_description = $request->description;
-            $product->product_price = $request->price;
-            $product->product_width = $request->width;
-            $product->product_height = $request->height;
-            $product->product_length = $request->length;
-            $product->product_discount = $request->discount;
-            $product->product_weight = $request->weight;
+            $product->name = $request->name;
+            $product->content = $request->content;
+            $product->description = $request->description;
+            $product->price = $request->price;
+            $product->width = $request->width;
+            $product->height = $request->height;
+            $product->length = $request->length;
+            $product->discount = $request->discount;
+            $product->weight = $request->weight;
             $product->brand_id = $request->brand;
             $product->category_id = $request->category;
-            $product->product_selling = 0;
+            $product->selling = 0;
             $product->save();
 
             if ($request->hasFile('fileList')) {
@@ -154,12 +154,12 @@ class ProductController extends Controller
                     $path = $image->move('img/product_image/', $fileNameToStore); 
 
                     $product_image = new Productimage;
-                    $product_image->product_id = $product->product_id;
+                    $product_image->product_id = $product->id;
                     $product_image->product_image_name = $fileNameToStore;
                     $product_image->save();
                 }
             }
-            $this->responseSuccess();
+            return $this->responseSuccess();
         }
     }
     public function detailProduct(Request $request) {
@@ -171,30 +171,30 @@ class ProductController extends Controller
                 $param = [
                     'url' => env('APP_URL'). '/img/product_image/' . $image->product_image_name,
                     'uid' => '-'.$key,
-                    'id' => $image->product_image_id,
+                    'id' => $image->id,
                     'status' => 'done'
                 ];
                 array_push($listImage, $param);
             }
             $params = [
-                'content' => $product->product_content,
-                'name' => $product->product_name,
-                'description' => $product->product_description,
-                'price' => $product->product_price,
-                'width' => $product->product_width,
-                'height' => $product->product_height,
-                'length' => $product->product_length,
-                'weight' => $product->product_weight,
-                'discount' => $product->product_discount,
+                'content' => $product->content,
+                'name' => $product->name,
+                'description' => $product->description,
+                'price' => $product->price,
+                'width' => $product->width,
+                'height' => $product->height,
+                'length' => $product->length,
+                'weight' => $product->weight,
+                'discount' => $product->discount,
                 'brand' => $product->brand_id,
                 'category' => $product->category_id,
-                'image' => env('APP_URL'). '/img/product/' . $product->product_image,
+                'image' => env('APP_URL'). '/img/product/' . $product->image,
                 'fileList' => $listImage
             ];
             return $this->responseSuccess($params);
         } catch(\Throwable $th) {
             \Log::info($th);
-            $this->responseError($th);
+            return $this->responseError($th);
         }
     }
     public function deleteImage(Request $request) {

@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Slide extends Model
 {
     // use HasFactory;
-    public $table = "cosmetics_slide";
-    protected $primaryKey = 'slide_id';
+    public $table = "slide";
+    protected $primaryKey = 'id';
 }

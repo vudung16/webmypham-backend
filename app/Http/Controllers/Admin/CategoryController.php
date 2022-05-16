@@ -11,13 +11,13 @@ class CategoryController extends Controller
 {
     public function getCategory(Request $request) {
         $search = $request->search;
-        $category = Category::where('category_name', 'like', "%$search%")->orderBy('category_id', 'DESC')->paginate(10);
+        $category = Category::where('name', 'like', "%$search%")->orderBy('id', 'DESC')->paginate(10);
         if ($category) {
             $category->getCollection()->transform(function ($value) {
 
                 return $params = [
-                    'id' => $value->category_id,
-                    'name' => $value->category_name,
+                    'id' => $value->id,
+                    'name' => $value->name,
                 ];
             });
         }
@@ -30,20 +30,20 @@ class CategoryController extends Controller
     public function createCategory(CategoryRequest $request) {
         $validated = $request->validated();
         $category = new Category;
-        $category->category_name = $request->name;
+        $category->name = $request->name;
         $category->save();
-        $this->responseSuccess();
+        return $this->responseSuccess();
     }
     public function updateCategory(CategoryRequest $request) {
         $validated = $request->validated();
         try {
-            Category::where('category_id',$request->id)->update([
-                'category_name'=>$request->name,
+            Category::where('id',$request->id)->update([
+                'name'=>$request->name,
             ]);
-            $this->responseSuccess();
+            return $this->responseSuccess();
         } catch(\Exception $e) {
             \Log::info($e);
-            $this->responseError('Có lỗi xảy ra');
+            return $this->responseError('Có lỗi xảy ra');
         }
     }
 }

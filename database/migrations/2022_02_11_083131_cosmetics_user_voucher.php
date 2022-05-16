@@ -13,7 +13,7 @@ class CosmeticsUserVoucher extends Migration
      */
     public function up()
     {
-        Schema::create('cosmetics_user_voucher', function (Blueprint $table) {
+        Schema::create('user_voucher', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('user_id');
             $table->bigInteger('voucher_id');
@@ -27,6 +27,6 @@ class CosmeticsUserVoucher extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cosmetics_user_voucher');
+        Schema::dropIfExists('user_voucher');
     }
 }

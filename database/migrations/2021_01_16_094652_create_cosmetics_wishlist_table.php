@@ -13,8 +13,8 @@ class CreateCosmeticsWishlistTable extends Migration
      */
     public function up()
     {
-        Schema::create('cosmetics_wishlist', function (Blueprint $table) {
-            $table->bigIncrements('wishlist_id');
+        Schema::create('wishlist', function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('product_id');
             $table->bigInteger('quantity');
@@ -29,6 +29,6 @@ class CreateCosmeticsWishlistTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cosmetics_wishlist');
+        Schema::dropIfExists('wishlist');
     }
 }

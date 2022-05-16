@@ -13,8 +13,8 @@ class CreateCosmeticsRateTable extends Migration
      */
     public function up()
     {
-        Schema::create('cosmetics_rate', function (Blueprint $table) {
-            $table->bigIncrements('rate_id');
+        Schema::create('rate', function (Blueprint $table) {
+            $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('product_id');
             $table->integer('rate_scores');
@@ -30,6 +30,6 @@ class CreateCosmeticsRateTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cosmetics_rate');
+        Schema::dropIfExists('rate');
     }
 }

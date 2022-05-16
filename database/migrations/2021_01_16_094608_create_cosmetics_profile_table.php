@@ -13,7 +13,7 @@ class CreateCosmeticsProfileTable extends Migration
      */
     public function up()
     {
-        Schema::create('cosmetics_profile', function (Blueprint $table) {
+        Schema::create('profile', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('order_id');
             $table->string('name');
@@ -34,6 +34,6 @@ class CreateCosmeticsProfileTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cosmetics_profile');
+        Schema::dropIfExists('profile');
     }
 }
