@@ -419,7 +419,7 @@ class WebviewController extends Controller
             $valueOrder = 'desc';
         }
         $search = $request->search;
-        $category = $request->id;
+        $category = $request->category_id;
         $product = DB::table('product')
                     ->when(isset($search), function ($query) use ($search) {
                         return $query->where('name', 'like', "%$search%");
@@ -437,7 +437,7 @@ class WebviewController extends Controller
         }
         $dataCategory='';
         if($category) {
-            $dataCategory = Category::where('id', $request->category_id)->first();
+            $dataCategory = Category::find($category);
         }
 
         return $this->responseSuccess(['product' => $product, 'category' => $dataCategory]);
@@ -533,12 +533,30 @@ class WebviewController extends Controller
                     }
                 }
 
+                $action = '';
+                if ($or->action === 1) {
+                    $action = 'Chờ xác nhận';
+                } 
+                if ($or->action === 2) {
+                    $action = 'Chờ lấy hàng';
+                } 
+                if ($or->action === 3) {
+                    $action = 'Đang giao hàng';
+                } 
+                if ($or->action === 4) {
+                    $action = 'Giao thành công';
+                } 
+                if ($or->action === 5) {
+                    $action = 'Đã hủy';
+                }
+
                 $dataOrder = [
                     'code' => $or->code,
                     'pay_ship' => $or->pay_ship,
                     'order_total_money' => $or->order_total_money,
                     'order_time' => $or->order_time,
-                    'voucher' => $voucher
+                    'voucher' => $voucher,
+                    'action' => $action
                 ];
 
                 array_push($arrayTotal, [$array['order'] = $dataOrder, $array['detail_order'] = $arr]);
