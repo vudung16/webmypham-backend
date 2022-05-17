@@ -31,6 +31,7 @@ Route::post('check-voucher', 'App\Http\Controllers\Api\WebviewController@checkVo
 Route::post('category-product', 'App\Http\Controllers\Api\WebviewController@categoryProduct')->name('api.home.categoryproduct');
 Route::post('rating', 'App\Http\Controllers\Api\WebviewController@rating')->name('api.home.rating');
 Route::post('comment', 'App\Http\Controllers\Api\WebviewController@comment')->name('api.comment');
+Route::post('info-order', 'App\Http\Controllers\Api\WebviewController@infoOrder')->name('api.infoOrder');
 // Route::post('dashboard', 'App\Http\Controllers\Admin\DashBoardController@dashboard')->name('api.dashboard');
 
 
@@ -40,6 +41,7 @@ Route::post('auth/register', 'App\Http\Controllers\Api\AuthController@register')
 Route::group(['middleware' => 'jwt.auth'], function(){
   Route::post('auth/logout', 'App\Http\Controllers\Api\AuthController@logout');
   Route::get('auth/user', 'App\Http\Controllers\Api\AuthController@user');
+  Route::post('auth/update-user', 'App\Http\Controllers\Api\AuthController@updateUser');
   Route::post('add-to-cart', 'App\Http\Controllers\Api\WebviewController@addToCart')->name('api.home.addtocart');
   Route::post('get-cart', 'App\Http\Controllers\Api\WebviewController@getCart')->name('api.getcart');
 });

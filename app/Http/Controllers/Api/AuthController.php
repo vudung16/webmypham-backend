@@ -10,6 +10,9 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\Models\User;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\UserRequest;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\File;
 
 class AuthController extends Controller
 {
@@ -64,7 +67,32 @@ class AuthController extends Controller
     public function user(Request $request)
     {
         $user = User::find(Auth::user()->id);
+        $user->image = env('APP_URL'). '/img/user/' . $user->image; 
         return $this->responseSuccess($user);
+    }
+
+    public function updateUser(UserRequest $request)
+    {   
+        $validated = $request->validated();
+        $user = User::find($request->id);
+        $user->name = $request->name;
+        $user->phone = $request->phone;
+        $user->email = $request->email;
+        if ($request->password) {
+            $user->password = Hash::make($request->password);
+        }
+        if($request->hasFile('image')){
+            $filenameWithExt = $request->file('image')->getClientOriginalName();
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            $extension = $request->file('image')->getClientOriginalExtension();
+            $fileNameToStore= $filename.'_'.time().'.'.$extension;
+            $path = $request->file('image')->move('img/user/', $fileNameToStore);
+            File::delete(public_path().'/img/user/'.$user->image);
+
+            $user->image = $fileNameToStore;
+        }
+        $user->save();
+        return $this->responseSuccess();
     }
 
     public function refresh()

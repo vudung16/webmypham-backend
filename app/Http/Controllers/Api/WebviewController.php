@@ -33,13 +33,13 @@ class WebviewController extends Controller
         $slide = Slide::where(['status'=> 1])->orderBy('id', 'DESC')->limit(3)->get();
         $banner = Slide::where(['status'=> 0])->orderBy('id', 'DESC')->limit(4)->get();
 
-        $array = [];
-        $img = '';
         foreach($slide as $sl) {
-            $img = env('APP_URL'). '/img/slide/' . $sl->image;
-            array_push($array, $img);
+            $sl->image = env('APP_URL'). '/img/slide/' . $sl->image;
         }
-        return $this->responseSuccess(['slide' => $array, 'bannner' => $banner]);
+        foreach($banner as $sl) {
+            $sl->image = env('APP_URL'). '/img/slide/' . $sl->image;
+        }
+        return $this->responseSuccess(['slide' => $slide, 'banner' => $banner]);
     }
 
     public function homeProduct() {
@@ -628,5 +628,40 @@ class WebviewController extends Controller
             ];
         });
         return $this->responseSuccess($comment);
+    }
+
+    public function infoOrder(Request $request) {
+        $order = Order::where('code', $request->search)->first();
+        if ($order) {
+            $info = $order->profile;
+            $action = '';
+            if ($order->action === 1) {
+                $action = 'Chờ xác nhận';
+            } 
+            if ($order->action === 2) {
+                $action = 'Chờ lấy hàng';
+            } 
+            if ($order->action === 3) {
+                $action = 'Đang giao hàng';
+            } 
+            if ($order->action === 4) {
+                $action = 'Giao thành công';
+            } 
+            if ($order->action === 5) {
+                $action = 'Đã hủy';
+            } 
+            $params = [
+                'code' => $order->code,
+                'name' => $info->name,
+                'phone' => $info->phone,
+                'date' => $order->order_time,
+                'money' => $order->order_total_money,
+                'isPayment' => $order->is_payment === 1 ? 'Chưa thanh toán' : 'Đã thanh toán',
+                'action' => $action
+            ];
+            return $this->responseSuccess($params);
+        } else {
+            return $this->responseSuccess(['message' => 'Không tìm thấy thông tin đơn hàng']);
+        }
     }
 }

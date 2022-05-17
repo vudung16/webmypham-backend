@@ -13,6 +13,6 @@ class Order extends Model
     protected $primaryKey = 'id';
 
     public function profile() {
-    	return $this->belongsTo('App\Models\Profile','order_id', 'order_id');
+    	return $this->belongsTo(Profile::class, 'id', 'order_id');
     }
 }

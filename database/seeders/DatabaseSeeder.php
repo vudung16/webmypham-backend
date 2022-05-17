@@ -311,6 +311,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'admin',
             'password' => Hash::make('12345'),
             'image' => 'abc.png',
+            'phone' => '038632297',
             'role' => 1,
             'email' => 'admin@gmail.com'
         ]);
@@ -319,6 +320,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'admin2',
             'password' => Hash::make('12345'),
             'image' => 'abc.png',
+            'phone' => '038632297',
             'role' => 1,
             'email' => 'admin@gmail.com'
         ]);
@@ -327,6 +329,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'admin3',
             'password' => Hash::make('12345'),
             'image' => 'abc.png',
+            'phone' => '038632297',
             'role' => 1,
             'email' => 'admin@gmail.com'
         ]);
@@ -335,6 +338,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'admin4',
             'password' => Hash::make('12345'),
             'image' => 'abc.png',
+            'phone' => '038632297',
             'role' => 1,
             'email' => 'admin@gmail.com'
         ]);
@@ -343,6 +347,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'admin5',
             'password' => Hash::make('12345'),
             'image' => 'abc.png',
+            'phone' => '038632297',
             'role' => 1,
             'email' => 'admin@gmail.com'
         ]);
@@ -351,6 +356,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'admin6',
             'password' => Hash::make('12345'),
             'image' => 'abc.png',
+            'phone' => '038632297',
             'role' => 1,
             'email' => 'admin@gmail.com'
         ]);
@@ -359,6 +365,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'admin7',
             'password' => Hash::make('12345'),
             'image' => 'abc.png',
+            'phone' => '038632297',
             'role' => 1,
             'email' => 'admin@gmail.com'
         ]);
