@@ -9,6 +9,7 @@ use App\Models\Productimage;
 use Illuminate\Support\Facades\File;
 use App\Http\Requests\ProductRequest;
 use Carbon\Carbon;
+use App\Models\Warehouse;
 
 class ProductController extends Controller
 {
@@ -63,6 +64,12 @@ class ProductController extends Controller
             $product->category_id = $request->category;
             $product->selling = 0;
             $product->save();
+
+            //tạo kho sản phẩm
+            $warehouse = new Warehouse;
+            $warehouse->product_id = $product->id;
+            $warehouse->quantity = 0;
+            $warehouse->save();
 
             if ($request->hasFile('fileList')) {
                 $files = $request->file('fileList');
