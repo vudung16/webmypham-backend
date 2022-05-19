@@ -248,6 +248,7 @@ class WebviewController extends Controller
         $validated = $request->validated();
 
         if ($request->type === 'vnpay') {
+            session()->put("order", $request->all());
             session(['url_prev' => url()->previous()]);
             $vnp_TmnCode = "2W0TX27O"; //Mã website tại VNPAY
             $vnp_HashSecret = "OVCTODOGEIHQBJVOYXXDCZIVPPEWBVSG"; //Chuỗi bí mật
@@ -307,10 +308,10 @@ class WebviewController extends Controller
     }
 
     public function returnVnpay(Request $request)
-    {
-        $url = 'https://webmypham-dev.vn:2222/checkout';
+    {   
+        \Log::info(session()->all());
         if($request->vnp_ResponseCode == "00") {
-            return redirect($url);
+            return view('payment', ['payment' => $request->all()]);
         }
         // session()->forget('url_prev');
         // return redirect($url)->with('errors' ,'Lỗi trong quá trình thanh toán phí dịch vụ');

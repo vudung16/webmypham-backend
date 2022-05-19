@@ -46,6 +46,7 @@ use Illuminate\Support\Facades\Route;
     });
     Route::group(['prefix' => 'import'], function(){
         Route::post('get-product', 'App\Http\Controllers\Admin\ImportController@getProductImport')->name('admin.getProductImport');
+        Route::post('import-warehouse', 'App\Http\Controllers\Admin\ImportController@importWarehouse')->name('admin.importWarehouse');
     });
 // });
 

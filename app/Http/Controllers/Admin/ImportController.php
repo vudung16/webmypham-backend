@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Warehouse;
 
 class ImportController extends Controller
 {
@@ -14,5 +15,19 @@ class ImportController extends Controller
             $pr->image = env('APP_URL'). '/img/product/' . $pr->image;
         }
         return $this->responseSuccess($product);
+    }
+    public function importWarehouse(Request $request) {
+        try {
+            $product = $request->all();
+            foreach ($product as $pr) {
+                $warehouse = Warehouse::where('product_id', $pr['id'])->first();
+                $warehouse->quantity += $pr['quantity'];
+                $warehouse->save(); 
+            }
+            return $this->responseSuccess();
+        } catch (\Throwable $th) {
+            \Log::info($th);
+            return $this->responseError($th);
+        }
     }
 }
