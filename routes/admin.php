@@ -44,6 +44,9 @@ use Illuminate\Support\Facades\Route;
         Route::post('list', 'App\Http\Controllers\Admin\OrderController@getOrder')->name('admin.getOrder');
         Route::post('detail', 'App\Http\Controllers\Admin\OrderController@detailOrder')->name('admin.detailOrder');
     });
+    Route::group(['prefix' => 'import'], function(){
+        Route::post('get-product', 'App\Http\Controllers\Admin\ImportController@getProductImport')->name('admin.getProductImport');
+    });
 // });
 
 ?>
