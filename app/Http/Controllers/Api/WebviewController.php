@@ -248,7 +248,8 @@ class WebviewController extends Controller
         $validated = $request->validated();
 
         if ($request->type === 'vnpay') {
-            session()->put("order", $request->all());
+            session(['order' => $request->all()]);
+            \Log::info(session()->all());
             session(['url_prev' => url()->previous()]);
             $vnp_TmnCode = "2W0TX27O"; //Mã website tại VNPAY
             $vnp_HashSecret = "OVCTODOGEIHQBJVOYXXDCZIVPPEWBVSG"; //Chuỗi bí mật
@@ -445,7 +446,6 @@ class WebviewController extends Controller
     }
 
     public function saveOrder($request) {
-        // \Log::info($request);
         $order = Order::where('user_id', $request['user_id'])->where('action', null)->first();
         // lưu order
         $paramsOrder = [

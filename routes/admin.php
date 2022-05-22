@@ -43,6 +43,8 @@ use Illuminate\Support\Facades\Route;
     Route::group(['prefix' => 'order'], function(){
         Route::post('list', 'App\Http\Controllers\Admin\OrderController@getOrder')->name('admin.getOrder');
         Route::post('detail', 'App\Http\Controllers\Admin\OrderController@detailOrder')->name('admin.detailOrder');
+        Route::post('change-action', 'App\Http\Controllers\Admin\OrderController@changeAction')->name('admin.changeAction');
+        Route::post('cancel-order', 'App\Http\Controllers\Admin\OrderController@cancelOrder')->name('admin.cancelOrder');
     });
     Route::group(['prefix' => 'import'], function(){
         Route::post('get-product', 'App\Http\Controllers\Admin\ImportController@getProductImport')->name('admin.getProductImport');
