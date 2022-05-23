@@ -23,6 +23,12 @@
                 <div id="loginform">
                     <div class="text-center p-t-20 p-b-20">
                         <h3 class="db">Thông tin đơn hàng</h3>
+                        <div>Tên khách hàng: {{ json_decode($payment['vnp_OrderInfo'])->name }}</div>
+                        <div>Số điện thoại: {{ json_decode($payment['vnp_OrderInfo'])->phone }}</div>
+                        <div>Email: {{ json_decode($payment['vnp_OrderInfo'])->email }}</div>
+                        <div>Phí vận chuyển: {{ json_decode($payment['vnp_OrderInfo'])->pay_ship }}</div>
+                        <div>Thanh toán: {{ json_decode($payment['vnp_OrderInfo'])->total }}</div>
+                        <div>Đã thanh toán qua cổng: {{ json_decode($payment['vnp_OrderInfo'])->type }}</div>
                     </div>
                 </div>
             </div>

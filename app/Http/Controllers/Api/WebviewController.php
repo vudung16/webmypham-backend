@@ -248,9 +248,7 @@ class WebviewController extends Controller
         $validated = $request->validated();
 
         if ($request->type === 'vnpay') {
-            session(['order' => $request->all()]);
-            \Log::info(session()->all());
-            session(['url_prev' => url()->previous()]);
+            // session(['url_prev' => url()->previous()]);
             $vnp_TmnCode = "2W0TX27O"; //Mã website tại VNPAY
             $vnp_HashSecret = "OVCTODOGEIHQBJVOYXXDCZIVPPEWBVSG"; //Chuỗi bí mật
             $vnp_Url = "http://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
@@ -271,7 +269,7 @@ class WebviewController extends Controller
                 "vnp_CurrCode" => "VND",
                 "vnp_IpAddr" => $vnp_IpAddr,
                 "vnp_Locale" => $vnp_Locale,
-                "vnp_OrderInfo" => $vnp_OrderInfo,
+                "vnp_OrderInfo" => json_encode($request->all()),
                 "vnp_OrderType" => $vnp_OrderType,
                 "vnp_ReturnUrl" => $vnp_Returnurl,
                 "vnp_TxnRef" => $vnp_TxnRef,
@@ -302,7 +300,7 @@ class WebviewController extends Controller
         }
 
         if ($request->type === 'shipcode') {
-            $this->saveOrder($request->all());
+            $this->saveOrder($request->all(), '');
 
             return $this->responseSuccess(['success' => 'Đặt hàng thành công']);
         }
@@ -310,11 +308,11 @@ class WebviewController extends Controller
 
     public function returnVnpay(Request $request)
     {   
-        \Log::info(session()->all());
+        \Log::info($request->all());
         if($request->vnp_ResponseCode == "00") {
+            // $this->saveOrder($request->vnp_OrderInfo, 'gate');
             return view('payment', ['payment' => $request->all()]);
         }
-        // session()->forget('url_prev');
         // return redirect($url)->with('errors' ,'Lỗi trong quá trình thanh toán phí dịch vụ');
     }
 
@@ -445,7 +443,10 @@ class WebviewController extends Controller
         return $this->responseSuccess(['product' => $product, 'category' => $dataCategory]);
     }
 
-    public function saveOrder($request) {
+    public function saveOrder($request, $gate) {
+        if ($gate) {
+            $request = json_decode($request, true);
+        }
         $order = Order::where('user_id', $request['user_id'])->where('action', null)->first();
         // lưu order
         $paramsOrder = [
@@ -454,7 +455,7 @@ class WebviewController extends Controller
             'pay_ship' => $request['pay_ship'],
             'action' => 1,
             'voucher_id' => $request['voucher_id'],
-            'is_payment' => 1,
+            'is_payment' => $gate ? 0 : 1,
             'code' => time() . '_' . Str::random(4)
         ];
         $updateOrder = Order::where('user_id', $order->user_id)->where('action', null)->update($paramsOrder);
@@ -498,6 +499,7 @@ class WebviewController extends Controller
                         ->when(isset($status), function ($query) use ($status) {
                             return $query->where('action', 'like', "%$status%");
                         })
+                        ->orderBy('id', 'desc')
                         ->get();
         $array = [
             "order" => '',
