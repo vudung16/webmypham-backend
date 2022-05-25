@@ -19,18 +19,18 @@
 <body>
     <div class="main-wrapper">
         <div class="auth-wrapper d-flex no-block justify-content-center align-items-center bg-dark">
-            <div class="auth-box bg-dark border-top border-secondary">
+            <div class="auth-box bg-dark border-secondary">
                 <div id="loginform">
                     <div class="text-center p-t-20 p-b-20">
-                        <h3 class="db">Thông tin đơn hàng</h3>
-                        <div style="color: #ffffff">Tên khách hàng: {{ json_decode($payment['vnp_OrderInfo'])->name }}</div>
-                        <div style="color: #ffffff">Số điện thoại: {{ json_decode($payment['vnp_OrderInfo'])->phone }}</div>
-                        <div style="color: #ffffff">Email: {{ json_decode($payment['vnp_OrderInfo'])->email }}</div>
-                        <div style="color: #ffffff">Phí vận chuyển: {{ json_decode($payment['vnp_OrderInfo'])->pay_ship }}</div>
-                        <div style="color: #ffffff">Thanh toán: {{ json_decode($payment['vnp_OrderInfo'])->total }}</div>
-                        <div style="color: #ffffff">Đã thanh toán qua cổng: {{ json_decode($payment['vnp_OrderInfo'])->type }}</div>
+                        <h3 class="db border-bottom">Thông tin đơn hàng</h3>
+                        <div style="color: #ffffff; text-align: left">Tên khách hàng: {{ json_decode($payment['vnp_OrderInfo'])->name }}</div>
+                        <div style="color: #ffffff; text-align: left">Số điện thoại: {{ json_decode($payment['vnp_OrderInfo'])->phone }}</div>
+                        <div style="color: #ffffff; text-align: left">Email: {{ json_decode($payment['vnp_OrderInfo'])->email }}</div>
+                        <div style="color: #ffffff; text-align: left">Phí vận chuyển: {{ json_decode($payment['vnp_OrderInfo'])->pay_ship }}</div>
+                        <div style="color: #ffffff; text-align: left">Thanh toán: {{ json_decode($payment['vnp_OrderInfo'])->total }}</div>
+                        <div style="color: #ffffff; text-align: left">Đã thanh toán qua cổng: {{ json_decode($payment['vnp_OrderInfo'])->type }}</div>
                     </div>
-                    <div>
+                    <div class="text-center">
                         <button><a href="https://doan-frontend-2022.herokuapp.com/#/">Về trang chủ</a></button>
                     </div>
                 </div>

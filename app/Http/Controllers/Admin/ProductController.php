@@ -36,7 +36,7 @@ class ProductController extends Controller
         return $this->responseSuccess($product);
     }
     public function deleteProduct(Request $request) {
-        File::delete(public_path().'/img/voucher/'.Voucher::find($request->id)->image);
+        File::delete(public_path().'/img/product/'.Product::find($request->id)->image);
         Product::find($request->id)->delete();
         return $this->responseSuccess();
     }
