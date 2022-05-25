@@ -44,6 +44,7 @@ Route::group(['middleware' => 'jwt.auth'], function(){
   Route::post('auth/update-user', 'App\Http\Controllers\Api\AuthController@updateUser');
   Route::post('add-to-cart', 'App\Http\Controllers\Api\WebviewController@addToCart')->name('api.home.addtocart');
   Route::post('get-cart', 'App\Http\Controllers\Api\WebviewController@getCart')->name('api.getcart');
+  Route::post('user-rate', 'App\Http\Controllers\Api\WebviewController@userRate')->name('api.userRate');
 });
 Route::group(['middleware' => 'jwt.refresh'], function(){
   Route::get('auth/refresh', 'App\Http\Controllers\Api\AuthController@refresh');

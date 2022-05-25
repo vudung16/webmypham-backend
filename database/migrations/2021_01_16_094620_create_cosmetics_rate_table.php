@@ -18,7 +18,7 @@ class CreateCosmeticsRateTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('product_id');
             $table->integer('rate_scores');
-            $table->string('rate_comment');	
+            $table->string('rate_comment')->nullable();	
             $table->timestamps();
         });
     }

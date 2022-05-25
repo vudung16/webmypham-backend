@@ -22,6 +22,7 @@ use App\Models\Profile;
 use Illuminate\Support\Str;
 use App\Models\User;
 use App\Models\ProductComment;
+use App\Models\Warehouse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use JWTAuth;
@@ -88,8 +89,18 @@ class WebviewController extends Controller
         $brand = Brand::where('id', $product->brand_id)->first();
         $image = Productimage::where('product_id', $request->id)->get();
         $category = Category::where('id', $product->category_id)->first();
-        $rate = Rate::where('product_id', $product->product_id)->avg('rate_scores');
-
+        $rateSum = Rate::where('product_id', $product->id)->avg('rate_scores');
+        $rateCount = Rate::where('product_id', $product->id)->count();
+        $checkWarehouse = true;
+        $warehouse = Warehouse::where('product_id', $product->id)->first();
+        if ($warehouse->quantity === 0) {
+            $checkWarehouse = false;
+        }
+        $rate = [
+            'sum' => $rateSum,
+            'count' => $rateCount
+        ];
+        
         $arr_img = [];
         array_push($arr_img, $product->image);
         foreach($image as $img) {
@@ -97,14 +108,13 @@ class WebviewController extends Controller
             array_push($arr_img, $img->product_image_name);
         }
 
-        // \Log::info($rate);
-
         $params = [
             'brand' => $brand->name,
             'product' => $product,
             'product_image' => $arr_img,
             'category' => ['name' => $category->name, 'id' => $category->id],
-            'rate' => $rate
+            'rate' => $rate,
+            'warehouse' => $checkWarehouse
         ];
 
         return $this->responseSuccess($params);
@@ -247,12 +257,22 @@ class WebviewController extends Controller
     public function payment(OrderRequest $request) {
         $validated = $request->validated();
 
+        $order = Order::where('user_id', $request->user_id)->where('code', null)->first();
+        $orderDetail = Order_detail::where('order_id', $order->id)->get();
+        //check số lượng tồn kho
+        foreach($orderDetail as $od) {
+            $product = Product::where('id', $od->product_id)->first();
+            $warehouse = Warehouse::where('product_id', $od->product_id)->first();
+            if ($od->quantity > $warehouse->quantity) {
+                return $this->responseError('Sản phẩm '. $product->name . ' hiện tại đã hết hàng hoặc không đủ số lượng, vui lòng chọn sản phẩm tương tự khác');
+            }
+        }
         if ($request->type === 'vnpay') {
             // session(['url_prev' => url()->previous()]);
             $vnp_TmnCode = "2W0TX27O"; //Mã website tại VNPAY
             $vnp_HashSecret = "OVCTODOGEIHQBJVOYXXDCZIVPPEWBVSG"; //Chuỗi bí mật
             $vnp_Url = "http://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-            $vnp_Returnurl = "http://127.0.0.1:2223/api/return-vnpay";
+            $vnp_Returnurl = env('APP_URL'). "/api/return-vnpay";
             $vnp_TxnRef = date("YmdHis"); //Mã đơn hàng. Trong thực tế Merchant cần insert đơn hàng vào DB và gửi mã này sang VNPAY
             $vnp_OrderInfo = "Thanh toán hóa đơn phí dich vụ";
             $vnp_OrderType = 'billpayment';
@@ -308,9 +328,8 @@ class WebviewController extends Controller
 
     public function returnVnpay(Request $request)
     {   
-        \Log::info($request->all());
         if($request->vnp_ResponseCode == "00") {
-            // $this->saveOrder($request->vnp_OrderInfo, 'gate');
+            $this->saveOrder($request->vnp_OrderInfo, 'gate');
             return view('payment', ['payment' => $request->all()]);
         }
         // return redirect($url)->with('errors' ,'Lỗi trong quá trình thanh toán phí dịch vụ');
@@ -448,6 +467,13 @@ class WebviewController extends Controller
             $request = json_decode($request, true);
         }
         $order = Order::where('user_id', $request['user_id'])->where('action', null)->first();
+        // trừ số lượng đã mua trong kho
+        $orderDetail = Order_detail::where('order_id', $order->id)->get();
+        foreach($orderDetail as $od) {
+            $warehouse = Warehouse::where('product_id', $od->product_id)->first();
+            $warehouse->quantity -= $od->quantity;
+            $warehouse->save();
+        }
         // lưu order
         $paramsOrder = [
             'order_time' => Carbon::now('Asia/Ho_Chi_Minh'),
@@ -514,7 +540,12 @@ class WebviewController extends Controller
                 $sum = 0;
                 $detail = Order_detail::where('order_id', $or->id)->get();
                 foreach($detail as $dt) {
+                    $userRate = false;
                     $product = Product::where('id',$dt->product_id)->first();
+                    $rate = Rate::where('user_id', $request->user_id)->where('product_id', $product->id)->first();
+                    if ($rate === null) {
+                        $userRate = true;
+                    }
                     $sum = $sum + $dt->detail_amount;
                     $params = [
                         'order_detail_id' => $dt->id,
@@ -523,6 +554,7 @@ class WebviewController extends Controller
                         'product_id' => $product->id,
                         'product_name' => $product->name,
                         'product_image' => env('APP_URL'). '/img/product/' . $product->image,
+                        'rate' => $userRate
                     ];
                     array_push($arr, $params);
                 }
@@ -684,5 +716,15 @@ class WebviewController extends Controller
         } else {
             return $this->responseSuccess(['message' => 'Không tìm thấy thông tin đơn hàng']);
         }
+    }
+
+    public function userRate(Request $request) {
+        $rate = new Rate;
+        $rate->product_id = $request->product_id;
+        $rate->rate_scores = $request->rate;
+        $rate->rate_comment = $request->comment;
+        $rate->user_id = $request->header('user-id');
+        $rate->save();
+        return $this->responseSuccess();
     }
 }
