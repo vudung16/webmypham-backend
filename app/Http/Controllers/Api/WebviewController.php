@@ -43,6 +43,14 @@ class WebviewController extends Controller
         return $this->responseSuccess(['slide' => $slide, 'banner' => $banner]);
     }
 
+    public function homeBrand() {
+        $brand = Brand::all();
+        foreach($brand as $br) {
+            $br->image = env('APP_URL'). '/img/brand/' . $br->image;
+        }
+        return $this->responseSuccess($brand);
+    }
+
     public function homeProduct() {
         $product = Product::orderBy('id', 'DESC')->limit(10)->get();
         foreach($product as $pr) {
@@ -78,7 +86,9 @@ class WebviewController extends Controller
 
     public function brand() {
         $brand = Brand::all();
-
+        foreach($brand as $br) {
+            $br->image =  env('APP_URL'). '/img/brand/' . $br->image;
+        }
         return $this->responseSuccess($brand);
     }
 
@@ -336,7 +346,7 @@ class WebviewController extends Controller
     }
 
     public function listVoucher() {
-        $voucher = Voucher::all();
+        $voucher = Voucher::orderBy('id', 'desc')->take(4)->get();
         $params = [];
         $status = true;
         foreach($voucher as $vc) {
@@ -662,7 +672,7 @@ class WebviewController extends Controller
         if ($request->value && $user) {
             $params = [
                 "parent_id" => 0,
-                "user_id" => $user,
+                "user_id" => $request->user_id,
                 "product_id" => $request->product_id,
                 "content" => $request->value,
             ];
@@ -723,7 +733,7 @@ class WebviewController extends Controller
         $rate->product_id = $request->product_id;
         $rate->rate_scores = $request->rate;
         $rate->rate_comment = $request->comment;
-        $rate->user_id = $request->header('user-id');
+        $rate->user_id = $request->user_id;
         $rate->save();
         return $this->responseSuccess();
     }
