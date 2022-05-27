@@ -42,9 +42,11 @@ class AuthController extends Controller
 
         $user = new User;
         $user->email = $request->email;
+        $user->phone = $request->phone;
         $user->name = $request->name;
         $user->password = bcrypt($request->password);
-        $user->role = 2;
+        $user->role = 1;
+        $user->image = 'image';
         $user->save();
         return $this->responseSuccess();
     }
