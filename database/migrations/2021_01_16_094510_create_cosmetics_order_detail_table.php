@@ -15,7 +15,7 @@ class CreateCosmeticsOrderDetailTable extends Migration
     {
         Schema::create('order_detail', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('product_id');
+            $table->unsignedBigInteger('product_id');
             $table->unsignedBigInteger('order_id');
             $table->integer('quantity');
             $table->integer('detail_amount');

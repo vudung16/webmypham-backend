@@ -15,7 +15,7 @@ class CreateCosmeticsProfileTable extends Migration
     {
         Schema::create('profile', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('order_id');
+            $table->unsignedBigInteger('order_id');
             $table->string('name');
             $table->string('email');
             $table->string('phone');

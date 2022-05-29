@@ -671,7 +671,6 @@ class WebviewController extends Controller
         $user = $request->user_id;
         if ($request->value && $user) {
             $params = [
-                "parent_id" => 0,
                 "user_id" => $request->user_id,
                 "product_id" => $request->product_id,
                 "content" => $request->value,

@@ -15,7 +15,7 @@ class Warehouse extends Migration
     {
         Schema::create('warehouse', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('product_id');
+            $table->unsignedBigInteger('product_id');
             $table->bigInteger('quantity');
         });
     }

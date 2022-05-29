@@ -15,8 +15,8 @@ class CosmeticsUserVoucher extends Migration
     {
         Schema::create('user_voucher', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('user_id');
-            $table->bigInteger('voucher_id');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('voucher_id');
         });
     }
 

@@ -17,7 +17,7 @@ class CreateCosmeticsOrderTable extends Migration
             $table->bigIncrements('id');
             $table->string('code')->nullable();
             $table->unsignedBigInteger('user_id');
-            $table->bigInteger('voucher_id')->nullable();
+            $table->unsignedBigInteger('voucher_id')->nullable();
             $table->date('order_time')->nullable();
             $table->double('order_total_money')->nullable();
             $table->double('pay_ship')->nullable();

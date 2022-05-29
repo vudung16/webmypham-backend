@@ -15,7 +15,6 @@ class CosmeticsProductComment extends Migration
     {
         Schema::create('product_comment', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('parent_id');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('product_id');
             $table->text('content');
