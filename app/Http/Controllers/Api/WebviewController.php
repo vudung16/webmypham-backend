@@ -35,10 +35,10 @@ class WebviewController extends Controller
         $banner = Slide::where(['status'=> 0])->orderBy('id', 'DESC')->limit(4)->get();
 
         foreach($slide as $sl) {
-            $sl->image = env('APP_URL'). '/img/slide/' . $sl->image;
+            $sl->image = env('APP_IMAGE'). 'slide/' . $sl->image;
         }
         foreach($banner as $sl) {
-            $sl->image = env('APP_URL'). '/img/slide/' . $sl->image;
+            $sl->image = env('APP_IMAGE'). 'slide/' . $sl->image;
         }
         return $this->responseSuccess(['slide' => $slide, 'banner' => $banner]);
     }
@@ -46,7 +46,7 @@ class WebviewController extends Controller
     public function homeBrand() {
         $brand = Brand::all();
         foreach($brand as $br) {
-            $br->image = env('APP_URL'). '/img/brand/' . $br->image;
+            $br->image = env('APP_IMAGE'). 'brand/' . $br->image;
         }
         return $this->responseSuccess($brand);
     }
@@ -54,7 +54,7 @@ class WebviewController extends Controller
     public function homeProduct() {
         $product = Product::orderBy('id', 'DESC')->limit(10)->get();
         foreach($product as $pr) {
-            $pr->image = env('APP_URL'). '/img/product/' . $pr->image;
+            $pr->image = env('APP_IMAGE'). 'product/' . $pr->image;
         }
 
         return $this->responseSuccess(['product' => $product]);
@@ -63,7 +63,7 @@ class WebviewController extends Controller
     public function productDiscount() {
         $productDiscount = Product::whereNotNull('discount')->orderBy('id', 'DESC')->limit(10)->get();
         foreach($productDiscount as $pr) {
-            $pr->image = env('APP_URL'). '/img/product/' . $pr->image;
+            $pr->image = env('APP_IMAGE'). 'product/' . $pr->image;
         }
 
         return $this->responseSuccess(['productDiscount' => $productDiscount]);
@@ -72,7 +72,7 @@ class WebviewController extends Controller
     public function productSelling() {
         $productSelling = Product::orderBy('selling', 'DESC')->limit(10)->get();
         foreach($productSelling as $pr) {
-            $pr->image = env('APP_URL'). '/img/product/' . $pr->image;
+            $pr->image = env('APP_IMAGE'). 'product/' . $pr->image;
         }
 
         return $this->responseSuccess(['productSelling' => $productSelling]);
@@ -87,14 +87,14 @@ class WebviewController extends Controller
     public function brand() {
         $brand = Brand::all();
         foreach($brand as $br) {
-            $br->image =  env('APP_URL'). '/img/brand/' . $br->image;
+            $br->image =  env('APP_IMAGE'). 'brand/' . $br->image;
         }
         return $this->responseSuccess($brand);
     }
 
     public function productDetail(Request $request) {
         $product = Product::findOrFail($request->id);
-        $product->image = env('APP_URL'). '/img/product/' . $product->image;
+        $product->image = env('APP_IMAGE'). 'product/' . $product->image;
 
         $brand = Brand::where('id', $product->brand_id)->first();
         $image = Productimage::where('product_id', $request->id)->get();
@@ -114,7 +114,7 @@ class WebviewController extends Controller
         $arr_img = [];
         array_push($arr_img, $product->image);
         foreach($image as $img) {
-            $img->product_image_name = env('APP_URL'). '/img/product_image/'.$img->product_image_name;
+            $img->product_image_name = env('APP_IMAGE'). 'product_image/'.$img->product_image_name;
             array_push($arr_img, $img->product_image_name);
         }
 
@@ -359,7 +359,7 @@ class WebviewController extends Controller
                 "id" => $vc->id,
                 "code" => $vc->code,
                 "name" => $vc->name,
-                "image" => env('APP_URL'). '/img/voucher/' . $vc->image,
+                "image" => env('APP_IMAGE'). 'voucher/' . $vc->image,
                 "start_date" => $vc->starts_at,
                 "end_date" => $vc->expires_at,
                 "minimum_order" => $vc->minimum_order,
@@ -462,7 +462,7 @@ class WebviewController extends Controller
                     ->limit(10)
                     ->get();
         foreach($product as $pr) {
-            $pr->image = env('APP_URL'). '/img/product/' . $pr->image;
+            $pr->image = env('APP_IMAGE'). 'product/' . $pr->image;
         }
         $dataCategory='';
         if($category) {
@@ -563,7 +563,7 @@ class WebviewController extends Controller
                         'detail_amount' => $dt->detail_amount,
                         'product_id' => $product->id,
                         'product_name' => $product->name,
-                        'product_image' => env('APP_URL'). '/img/product/' . $product->image,
+                        'product_image' => env('APP_IMAGE'). 'product/' . $product->image,
                         'rate' => $userRate
                     ];
                     array_push($arr, $params);
@@ -616,7 +616,7 @@ class WebviewController extends Controller
             ->where('wishlist.user_id', $request)->orderBy('wishlist.id','asc')->get();
 
         foreach($wishlists as $pr) {
-            $pr->image = env('APP_URL'). '/img/product/' . $pr->image;
+            $pr->image = env('APP_IMAGE'). 'product/' . $pr->image;
         }
 
         $sum_quantity = 0;
@@ -660,7 +660,7 @@ class WebviewController extends Controller
                    'rate_comment' => $value->rate_comment,
                    'date' => $value->created_at,
                    'name' => $user->name,
-                   'image' => env('APP_URL') . '/img/user/' . $user->image
+                   'image' => env('APP_IMAGE') . 'user/' . $user->image
                ];
            });
        }
@@ -684,7 +684,7 @@ class WebviewController extends Controller
 
             return $params = [
                 "author" => $user->name,
-                "avatar" => env('APP_URL'). '/img/user/' . $user->image,
+                "avatar" => env('APP_IMAGE'). 'user/' . $user->image,
                 "content" => $value->content,
                 "datetime" => $value->created_at
             ];

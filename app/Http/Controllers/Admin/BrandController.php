@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Brand;
 use Illuminate\Support\Facades\File;
 use App\Http\Requests\BrandRequest;
+use Storage;
 use Carbon\Carbon;
 
 
@@ -21,14 +22,14 @@ class BrandController extends Controller
                 return $params = [
                     'id' => $value->id,
                     'name' => $value->name,
-                    'image' => env('APP_URL') . '/img/brand/' . $value->image,
+                    'image' => env('APP_IMAGE') . 'brand/' . $value->image,
                 ];
             });
         }
         return $this->responseSuccess($brand);
     }
     public function deleteBrand(Request $request) {
-        File::delete(public_path().'/img/brand/'.Brand::find($request->id)->image);
+        Storage::disk('s3')->delete('brand/' . ($request->id)->image);
         Brand::find($request->id)->delete();
         return $this->responseSuccess();
     }
@@ -39,7 +40,7 @@ class BrandController extends Controller
             $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
             $extension = $request->file('image')->getClientOriginalExtension();
             $fileNameToStore= $filename.'_'.time().'.'.$extension;
-            $path = $request->file('image')->move('img/brand/', $fileNameToStore);
+            Storage::disk('s3')->put('brand/' . $fileNameToStore, file_get_contents($request->file('image')), 'public');
 
             $brand = new Brand;
             $brand->image = $fileNameToStore;
@@ -61,8 +62,8 @@ class BrandController extends Controller
             $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
             $extension = $request->file('image')->getClientOriginalExtension();
             $fileNameToStore= $filename.'_'.time().'.'.$extension;
-            $path = $request->file('image')->move('img/brand/', $fileNameToStore);
-            File::delete(public_path().'/img/brand/'.$imageOld);
+            Storage::disk('s3')->put('brand/' . $fileNameToStore, file_get_contents($request->file('image')), 'public');
+            Storage::disk('s3')->delete('brand/' . $imageOld);
 
             Brand::where('id',$brand_id)->update([
                 'image'=> $fileNameToStore,
