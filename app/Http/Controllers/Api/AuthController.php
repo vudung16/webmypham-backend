@@ -13,6 +13,7 @@ use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\File;
+use Storage;
 
 class AuthController extends Controller
 {
@@ -69,7 +70,7 @@ class AuthController extends Controller
     public function user(Request $request)
     {
         $user = User::find(Auth::user()->id);
-        $user->image = env('APP_URL'). '/img/user/' . $user->image; 
+        $user->image = env('APP_IMAGE'). 'user/' . $user->image; 
         return $this->responseSuccess($user);
     }
 
@@ -88,8 +89,8 @@ class AuthController extends Controller
             $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
             $extension = $request->file('image')->getClientOriginalExtension();
             $fileNameToStore= $filename.'_'.time().'.'.$extension;
-            $path = $request->file('image')->move('img/user/', $fileNameToStore);
-            File::delete(public_path().'/img/user/'.$user->image);
+            Storage::disk('s3')->put('user/' . $fileNameToStore, file_get_contents($request->file('image')), 'public');
+            Storage::disk('s3')->delete('user/' . $user->image);
 
             $user->image = $fileNameToStore;
         }

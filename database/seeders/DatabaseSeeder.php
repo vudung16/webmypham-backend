@@ -16,66 +16,70 @@ class DatabaseSeeder extends Seeder
     {
         // data brand
         DB::table('brand')->insert([
-            'name' => 'Thương hiệu 1',
-            'image' => 'image1.jpg',
+            'name' => 'Sunhouse',
+            'image' => '1.jpg',
         ]);
         DB::table('brand')->insert([
-            'name' => 'Thương hiệu 2',
-            'image' => 'image1.jpg',
+            'name' => 'Kangaroo',
+            'image' => '2.jpg',
         ]);
         DB::table('brand')->insert([
-            'name' => 'Thương hiệu 3',
-            'image' => 'image1.jpg',
+            'name' => 'Philips',
+            'image' => '1.jpg',
         ]);
         DB::table('brand')->insert([
-            'name' => 'Thương hiệu 4',
-            'image' => 'image1.jpg',
-        ]);
-        DB::table('brand')->insert([
-            'name' => 'Thương hiệu 5',
-            'image' => 'image1.jpg',
-        ]);
-        DB::table('brand')->insert([
-            'name' => 'Thương hiệu 6',
-            'image' => 'image1.jpg',
+            'name' => 'Noitro.vn',
+            'image' => '1.jpg',
         ]);
 
         // data category
         DB::table('category')->insert([
-            'name' => 'Trang điểm'
+            'name' => 'Đồ gia dụng'
         ]);
         DB::table('category')->insert([
-            'name' => 'Chăm sóc da'
+            'name' => 'Mâm cơm mẫu'
         ]);
         DB::table('category')->insert([
-            'name' => 'Chăm sóc tóc'
+            'name' => 'Thực phẩm sẵn'
         ]);
         DB::table('category')->insert([
-            'name' => 'Phụ kiện'
+            'name' => 'Rau củ quả'
         ]);
         DB::table('category')->insert([
-            'name' => 'Nước hoa'
+            'name' => 'Thịt cá trứng'
         ]);
         DB::table('category')->insert([
-            'name' => 'Chăm sóc toàn thân'
+            'name' => 'Thủy hải sản'
         ]);
         DB::table('category')->insert([
-            'name' => 'Làm đẹp'
+            'name' => 'Thực phẩm đông lạnh'
         ]);
 
         //data Slide
 
         DB::table('slide')->insert([
-            'image' => 'banner-chuong-trinh-dinh-cu-Chau-Au-Cyprus-3_1920x650_1619248280.jpg',
+            'image' => '1.png',
             'status' => 1
         ]);
         DB::table('slide')->insert([
-            'image' => '3169-13dc-4d1f-8cf9-74526f2cb115_1619248296.jpg',
+            'image' => '2.jpg',
             'status' => 1
         ]);
         DB::table('slide')->insert([
-            'image' => 'abc_1619248317.jpg',
+            'image' => '3.jpg',
             'status' => 1
+        ]);
+        DB::table('slide')->insert([
+            'image' => '4.jpg',
+            'status' => 1
+        ]);
+        DB::table('slide')->insert([
+            'image' => '5.jpg',
+            'status' => 0
+        ]);
+        DB::table('slide')->insert([
+            'image' => '6.jpg',
+            'status' => 0
         ]);
 
         // data Rate
@@ -279,7 +283,7 @@ class DatabaseSeeder extends Seeder
             'image' => 'abc.png',
             'phone' => '038632297',
             'role' => 1,
-            'email' => 'admin@gmail.com'
+            'email' => 'admin1@gmail.com'
         ]);
         DB::table('users')->insert([
             'name' => 'admin2',
@@ -287,7 +291,7 @@ class DatabaseSeeder extends Seeder
             'image' => 'abc.png',
             'phone' => '038632297',
             'role' => 1,
-            'email' => 'admin@gmail.com'
+            'email' => 'admin2@gmail.com'
         ]);
         DB::table('users')->insert([
             'name' => 'admin3',
@@ -295,7 +299,7 @@ class DatabaseSeeder extends Seeder
             'image' => 'abc.png',
             'phone' => '038632297',
             'role' => 1,
-            'email' => 'admin@gmail.com'
+            'email' => 'admin3@gmail.com'
         ]);
         DB::table('users')->insert([
             'name' => 'admin4',
@@ -303,7 +307,7 @@ class DatabaseSeeder extends Seeder
             'image' => 'abc.png',
             'phone' => '038632297',
             'role' => 1,
-            'email' => 'admin@gmail.com'
+            'email' => 'admin4@gmail.com'
         ]);
         DB::table('users')->insert([
             'name' => 'admin5',
@@ -311,7 +315,7 @@ class DatabaseSeeder extends Seeder
             'image' => 'abc.png',
             'phone' => '038632297',
             'role' => 1,
-            'email' => 'admin@gmail.com'
+            'email' => 'admin5@gmail.com'
         ]);
         DB::table('users')->insert([
             'name' => 'admin6',
@@ -319,7 +323,7 @@ class DatabaseSeeder extends Seeder
             'image' => 'abc.png',
             'phone' => '038632297',
             'role' => 1,
-            'email' => 'admin@gmail.com'
+            'email' => 'admin6@gmail.com'
         ]);
         DB::table('users')->insert([
             'name' => 'admin7',
@@ -327,7 +331,7 @@ class DatabaseSeeder extends Seeder
             'image' => 'abc.png',
             'phone' => '038632297',
             'role' => 1,
-            'email' => 'admin@gmail.com'
+            'email' => 'admin7@gmail.com'
         ]);
 
         //data user_voucher

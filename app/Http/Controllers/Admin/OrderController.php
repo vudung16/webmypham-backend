@@ -11,6 +11,7 @@ use App\Models\Order_detail;
 use App\Models\Product;
 use App\Models\Voucher;
 use App\Models\Profile;
+use Storage;
 
 class OrderController extends Controller
 {
@@ -59,7 +60,7 @@ class OrderController extends Controller
 
         $sum_price = 0;
         foreach($orderDetail as $od) {
-            $od->image = env('APP_URL'). '/img/product/' . $od->image;
+            $od->image = env('APP_IMAGE'). 'product/' . $od->image;
             if(isset($od->discount)) {
                 $sum_price += ($od->price - (($od->discount /100) * $od->price)) * $od->quantity;
             } else {
