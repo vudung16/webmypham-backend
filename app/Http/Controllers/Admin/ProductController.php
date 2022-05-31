@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\File;
 use App\Http\Requests\ProductRequest;
 use Carbon\Carbon;
 use App\Models\Warehouse;
+use Storage;
 
 class ProductController extends Controller
 {
