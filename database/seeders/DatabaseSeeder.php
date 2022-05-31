@@ -14,6 +14,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        $this->call([
+            PermissionTableSeeder::class,
+            RoleTableSeeder::class,
+            UserTableSeeder::class,
+        ]);
         // data brand
         DB::table('brand')->insert([
             'name' => 'Sunhouse',
@@ -277,62 +282,62 @@ class DatabaseSeeder extends Seeder
         ]);
 
         //data user
-        DB::table('users')->insert([
-            'name' => 'admin',
-            'password' => Hash::make('12345'),
-            'image' => 'abc.png',
-            'phone' => '038632297',
-            'role' => 1,
-            'email' => 'admin1@gmail.com'
-        ]);
-        DB::table('users')->insert([
-            'name' => 'admin2',
-            'password' => Hash::make('12345'),
-            'image' => 'abc.png',
-            'phone' => '038632297',
-            'role' => 1,
-            'email' => 'admin2@gmail.com'
-        ]);
-        DB::table('users')->insert([
-            'name' => 'admin3',
-            'password' => Hash::make('12345'),
-            'image' => 'abc.png',
-            'phone' => '038632297',
-            'role' => 1,
-            'email' => 'admin3@gmail.com'
-        ]);
-        DB::table('users')->insert([
-            'name' => 'admin4',
-            'password' => Hash::make('12345'),
-            'image' => 'abc.png',
-            'phone' => '038632297',
-            'role' => 1,
-            'email' => 'admin4@gmail.com'
-        ]);
-        DB::table('users')->insert([
-            'name' => 'admin5',
-            'password' => Hash::make('12345'),
-            'image' => 'abc.png',
-            'phone' => '038632297',
-            'role' => 1,
-            'email' => 'admin5@gmail.com'
-        ]);
-        DB::table('users')->insert([
-            'name' => 'admin6',
-            'password' => Hash::make('12345'),
-            'image' => 'abc.png',
-            'phone' => '038632297',
-            'role' => 1,
-            'email' => 'admin6@gmail.com'
-        ]);
-        DB::table('users')->insert([
-            'name' => 'admin7',
-            'password' => Hash::make('12345'),
-            'image' => 'abc.png',
-            'phone' => '038632297',
-            'role' => 1,
-            'email' => 'admin7@gmail.com'
-        ]);
+        // DB::table('users')->insert([
+        //     'name' => 'admin',
+        //     'password' => Hash::make('12345'),
+        //     'image' => 'abc.png',
+        //     'phone' => '038632297',
+        //     'role' => 1,
+        //     'email' => 'admin1@gmail.com'
+        // ]);
+        // DB::table('users')->insert([
+        //     'name' => 'admin2',
+        //     'password' => Hash::make('12345'),
+        //     'image' => 'abc.png',
+        //     'phone' => '038632297',
+        //     'role' => 1,
+        //     'email' => 'admin2@gmail.com'
+        // ]);
+        // DB::table('users')->insert([
+        //     'name' => 'admin3',
+        //     'password' => Hash::make('12345'),
+        //     'image' => 'abc.png',
+        //     'phone' => '038632297',
+        //     'role' => 1,
+        //     'email' => 'admin3@gmail.com'
+        // ]);
+        // DB::table('users')->insert([
+        //     'name' => 'admin4',
+        //     'password' => Hash::make('12345'),
+        //     'image' => 'abc.png',
+        //     'phone' => '038632297',
+        //     'role' => 1,
+        //     'email' => 'admin4@gmail.com'
+        // ]);
+        // DB::table('users')->insert([
+        //     'name' => 'admin5',
+        //     'password' => Hash::make('12345'),
+        //     'image' => 'abc.png',
+        //     'phone' => '038632297',
+        //     'role' => 1,
+        //     'email' => 'admin5@gmail.com'
+        // ]);
+        // DB::table('users')->insert([
+        //     'name' => 'admin6',
+        //     'password' => Hash::make('12345'),
+        //     'image' => 'abc.png',
+        //     'phone' => '038632297',
+        //     'role' => 1,
+        //     'email' => 'admin6@gmail.com'
+        // ]);
+        // DB::table('users')->insert([
+        //     'name' => 'admin7',
+        //     'password' => Hash::make('12345'),
+        //     'image' => 'abc.png',
+        //     'phone' => '038632297',
+        //     'role' => 1,
+        //     'email' => 'admin7@gmail.com'
+        // ]);
 
         //data user_voucher
         DB::table('user_voucher')->insert([
