@@ -6,10 +6,19 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use App\Http\Requests\UserAdminRequest;
 use Storage;
+use JWTAuth;
 
 class UserController extends Controller
 {
+    function __construct() {
+        $user = JWTAuth::toUser(JWTAuth::getToken());
+        if (!($user->role_admin & 16)) {
+            $this->responseError();
+        }
+    }
+
     public function listUser(Request $request) {
         $key_search = $request->search;
         $user = DB::table('users')
@@ -36,7 +45,8 @@ class UserController extends Controller
         return $this->responseSuccess();
     }
 
-    public function createUser(Request $request) {
+    public function createUser(UserAdminRequest $request) {
+        $validated = $request->validated();
         $user = new User;
         $user->name = $request->name;
         $user->email = $request->email;

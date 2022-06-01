@@ -26,7 +26,8 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
-                'name' => 'required|unique:users',
+                'name' => 'required',
+                'email' => 'required|unique:users,email',
                 'password'=>'required||min:8|max:32',
                 'retype_password' => 'required|same:password',
         ];
@@ -39,7 +40,8 @@ class RegisterRequest extends FormRequest
             'password.required' => 'Bạn chưa nhập mật khẩu',
             'password.max' => 'Mật khẩu phải có ít hơn 32 kí tự',
             'password.min' => 'Mật khẩu phải có nhiều hơn 8 kí tự',
-            'name.unique' => 'Tài khoản đã tồn tại',
+            'email.required' => 'Vui lòng nhập email',
+            'email.unique' => 'Email đã tồn tại',
             'retype_password.same' => 'Mật khẩu nhập lại chưa khớp'
         ];
     }

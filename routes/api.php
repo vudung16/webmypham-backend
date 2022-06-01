@@ -45,11 +45,6 @@ Route::group(['middleware' => 'jwt.auth'], function(){
   Route::post('add-to-cart', 'App\Http\Controllers\Api\WebviewController@addToCart')->name('api.home.addtocart');
   Route::post('get-cart', 'App\Http\Controllers\Api\WebviewController@getCart')->name('api.getcart');
   Route::post('user-rate', 'App\Http\Controllers\Api\WebviewController@userRate')->name('api.userRate');
-  Route::get('/testtt', function () {
-      $user = request()->user();
-      dd($user->can('delete-tasks'));
-      // return view('welcome');
-  });
 });
 Route::group(['middleware' => 'jwt.refresh'], function(){
   Route::get('auth/refresh', 'App\Http\Controllers\Api\AuthController@refresh');
