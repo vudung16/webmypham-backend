@@ -50,6 +50,12 @@ use Illuminate\Support\Facades\Route;
         Route::post('get-product', 'App\Http\Controllers\Admin\ImportController@getProductImport')->name('admin.getProductImport');
         Route::post('import-warehouse', 'App\Http\Controllers\Admin\ImportController@importWarehouse')->name('admin.importWarehouse');
     });
+    Route::group(['prefix' => 'user'], function(){
+        Route::post('list', 'App\Http\Controllers\Admin\UserController@listUser')->name('admin.listUser');
+        Route::post('update-role', 'App\Http\Controllers\Admin\UserController@updateRole')->name('admin.updateRole');
+        Route::post('delete', 'App\Http\Controllers\Admin\UserController@deleteUser')->name('admin.deleteUser');
+        Route::post('create', 'App\Http\Controllers\Admin\UserController@createUser')->name('admin.createUser');
+    });
 // });
 
 ?>

@@ -20,6 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('image');
             $table->string('phone');
             $table->integer('role')->default(2);
+            $table->integer('role_admin')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
