@@ -18,117 +18,9 @@ class DatabaseSeeder extends Seeder
             PermissionTableSeeder::class,
             RoleTableSeeder::class,
             UserTableSeeder::class,
-        ]);
-        // data brand
-        DB::table('brand')->insert([
-            'name' => 'Sunhouse',
-            'image' => '1.jpg',
-        ]);
-        DB::table('brand')->insert([
-            'name' => 'Kangaroo',
-            'image' => '2.jpg',
-        ]);
-        DB::table('brand')->insert([
-            'name' => 'Philips',
-            'image' => '1.jpg',
-        ]);
-        DB::table('brand')->insert([
-            'name' => 'Noitro.vn',
-            'image' => '1.jpg',
-        ]);
-
-        // data category
-        DB::table('category')->insert([
-            'name' => 'Đồ gia dụng'
-        ]);
-        DB::table('category')->insert([
-            'name' => 'Mâm cơm mẫu'
-        ]);
-        DB::table('category')->insert([
-            'name' => 'Thực phẩm sẵn'
-        ]);
-        DB::table('category')->insert([
-            'name' => 'Rau củ quả'
-        ]);
-        DB::table('category')->insert([
-            'name' => 'Thịt cá trứng'
-        ]);
-        DB::table('category')->insert([
-            'name' => 'Thủy hải sản'
-        ]);
-        DB::table('category')->insert([
-            'name' => 'Thực phẩm đông lạnh'
-        ]);
-
-        //data Slide
-
-        DB::table('slide')->insert([
-            'image' => '1.png',
-            'status' => 1
-        ]);
-        DB::table('slide')->insert([
-            'image' => '2.jpg',
-            'status' => 1
-        ]);
-        DB::table('slide')->insert([
-            'image' => '3.jpg',
-            'status' => 1
-        ]);
-        DB::table('slide')->insert([
-            'image' => '4.jpg',
-            'status' => 1
-        ]);
-        DB::table('slide')->insert([
-            'image' => '5.jpg',
-            'status' => 0
-        ]);
-        DB::table('slide')->insert([
-            'image' => '6.jpg',
-            'status' => 0
-        ]);
-
-        // data Rate
-        DB::table('rate')->insert([
-            'user_id' => 2,
-            'product_id' => 1,
-            'rate_scores' => 4,
-            'rate_comment' => 'Sản phẩm rất tốt'
-        ]);
-        DB::table('rate')->insert([
-            'user_id' => 3,
-            'product_id' => 1,
-            'rate_scores' => 3,
-            'rate_comment' => 'Sản phẩm rất tốt'
-        ]);
-        DB::table('rate')->insert([
-            'user_id' => 1,
-            'product_id' => 1,
-            'rate_scores' => 2,
-            'rate_comment' => 'Sản phẩm rất tốt'
-        ]);
-        DB::table('rate')->insert([
-            'user_id' => 4,
-            'product_id' => 1,
-            'rate_scores' => 2,
-            'rate_comment' => 'Sản phẩm rất tốt'
-        ]);
-        DB::table('rate')->insert([
-            'user_id' => 5,
-            'product_id' => 1,
-            'rate_scores' => 5,
-            'rate_comment' => 'Sản phẩm rất tốt'
-        ]);
-        DB::table('rate')->insert([
-            'user_id' => 6,
-            'product_id' => 1,
-            'rate_scores' => 3,
-            'rate_comment' => 'Sản phẩm rất tốt'
-        ]);
-        DB::table('rate')->insert([
-            'user_id' => 7,
-            'product_id' => 1,
-            'rate_scores' => 4,
-            'rate_comment' => 'Sản phẩm rất tốt'
+            BrandSeeder::class,
+            CategorySeeder::class,
+            SlideSeeder::class,
         ]);
 
         // data Product
@@ -136,7 +28,7 @@ class DatabaseSeeder extends Seeder
             'name' =>'Bột uống đẹp da The Collagen Shiseido 126g – Mẫu 2020',
             'description' => 'aaaaaaaaaaaaaaaaa',
             'content' => 'Ligula ullamcorper malesuada proin libero nunc consequat interdum varius. Turpis egestas pretium aenean pharetra magna ac placerat. Sed egestas egestas fringilla phasellus faucibus scelerisque eleifend donec. Sed cras ornare arcu dui. Aliquam vestibulum morbi blandit cursus. Adipiscing elit ut aliquam purus sit amet. Aenean sed adipiscing diam donec adipiscing tristique risus nec. Ut etiam sit amet nisl purus in mollis. Eu mi bibendum neque egestas congue quisque egestas diam in. Pellentesque adipiscing commodo elit at imperdiet dui accumsan sit.',
-            'image' => 'banner-chuong-trinh-dinh-cu-Chau-Au-Cyprus-3_1920x650_1619248621.jpg',
+            'image' => '1.jfif',
             'price' => 600000,
             'discount' => 15,
             'selling' => 100,
@@ -151,7 +43,7 @@ class DatabaseSeeder extends Seeder
             'name' =>'Kem Chống Nắng Innisfree Intensive Long-Lasting',
             'description' => 'bbbbbbbbbbbbbbbbb',
             'content' => 'Ligula ullamcorper malesuada proin libero nunc consequat interdum varius. Turpis egestas pretium aenean pharetra magna ac placerat. Sed egestas egestas fringilla phasellus faucibus scelerisque eleifend donec. Sed cras ornare arcu dui. Aliquam vestibulum morbi blandit cursus. Adipiscing elit ut aliquam purus sit amet. Aenean sed adipiscing diam donec adipiscing tristique risus nec. Ut etiam sit amet nisl purus in mollis. Eu mi bibendum neque egestas congue quisque egestas diam in. Pellentesque adipiscing commodo elit at imperdiet dui accumsan sit.',
-            'image' => 'abc_1619248657.jpg',
+            'image' => '2.jfif',
             'price' => 500000,
             'discount' => 5,
             'selling' => 90,
@@ -166,7 +58,7 @@ class DatabaseSeeder extends Seeder
             'name' =>'Thuốc nhuộm tóc màu đen',
             'description' => 'ccccccccccccc',
             'content' => 'Ligula ullamcorper malesuada proin libero nunc consequat interdum varius. Turpis egestas pretium aenean pharetra magna ac placerat. Sed egestas egestas fringilla phasellus faucibus scelerisque eleifend donec. Sed cras ornare arcu dui. Aliquam vestibulum morbi blandit cursus. Adipiscing elit ut aliquam purus sit amet. Aenean sed adipiscing diam donec adipiscing tristique risus nec. Ut etiam sit amet nisl purus in mollis. Eu mi bibendum neque egestas congue quisque egestas diam in. Pellentesque adipiscing commodo elit at imperdiet dui accumsan sit.',
-            'image' => '3169-13dc-4d1f-8cf9-74526f2cb115_1619248697.jpg',
+            'image' => '3.jfif',
             'price' => 400000,
             'discount' => 10,
             'selling' => 80,
@@ -181,7 +73,7 @@ class DatabaseSeeder extends Seeder
             'name' =>'Thuốc nhuộm tóc màu trắng',
             'description' => 'ddddddddddddd',
             'content' => 'Ligula ullamcorper malesuada proin libero nunc consequat interdum varius. Turpis egestas pretium aenean pharetra magna ac placerat. Sed egestas egestas fringilla phasellus faucibus scelerisque eleifend donec. Sed cras ornare arcu dui. Aliquam vestibulum morbi blandit cursus. Adipiscing elit ut aliquam purus sit amet. Aenean sed adipiscing diam donec adipiscing tristique risus nec. Ut etiam sit amet nisl purus in mollis. Eu mi bibendum neque egestas congue quisque egestas diam in. Pellentesque adipiscing commodo elit at imperdiet dui accumsan sit.',
-            'image' => '173400742_460638591874969_4862181734524333373_n_1620126373.jpg',
+            'image' => '4.jfif',
             'price' => 300000,
             'discount' => 15,
             'selling' => 70,
@@ -196,7 +88,7 @@ class DatabaseSeeder extends Seeder
             'name' =>'Thuốc kích thích mọc tóc mạnh dũng 200g',
             'description' => 'eeeeeeeeeeeeeeeeee',
             'content' => 'Ligula ullamcorper malesuada proin libero nunc consequat interdum varius. Turpis egestas pretium aenean pharetra magna ac placerat. Sed egestas egestas fringilla phasellus faucibus scelerisque eleifend donec. Sed cras ornare arcu dui. Aliquam vestibulum morbi blandit cursus. Adipiscing elit ut aliquam purus sit amet. Aenean sed adipiscing diam donec adipiscing tristique risus nec. Ut etiam sit amet nisl purus in mollis. Eu mi bibendum neque egestas congue quisque egestas diam in. Pellentesque adipiscing commodo elit at imperdiet dui accumsan sit.',
-            'image' => '177477867_167044531882917_8303938402316297695_n_1620126681.jpg',
+            'image' => '5.jfif',
             'price' => 200000,
             'discount' => 15,
             'selling' => 60,
@@ -211,7 +103,67 @@ class DatabaseSeeder extends Seeder
             'name' =>'Kem chống nắng toàn thân ban đêm Mạnh Dũng 200g',
             'description' => 'ffffffffffffffffff',
             'content' => 'Ligula ullamcorper malesuada proin libero nunc consequat interdum varius. Turpis egestas pretium aenean pharetra magna ac placerat. Sed egestas egestas fringilla phasellus faucibus scelerisque eleifend donec. Sed cras ornare arcu dui. Aliquam vestibulum morbi blandit cursus. Adipiscing elit ut aliquam purus sit amet. Aenean sed adipiscing diam donec adipiscing tristique risus nec. Ut etiam sit amet nisl purus in mollis. Eu mi bibendum neque egestas congue quisque egestas diam in. Pellentesque adipiscing commodo elit at imperdiet dui accumsan sit.',
-            'image' => '843_Webp.net-compress-image-16_1620185044.jpg',
+            'image' => '6.jfif',
+            'price' => 100000,
+            'discount' => 15,
+            'selling' => 50,
+            'category_id' => 6,
+            'brand_id' => 6,
+            'width' => 6,
+            'height' => 6,
+            'length' => 6,
+            'weight' => 6
+        ]);
+        DB::table('product')->insert([
+            'name' =>'Kem chống nắng toàn thân ban đêm Mạnh Dũng 200g',
+            'description' => 'ffffffffffffffffff',
+            'content' => 'Ligula ullamcorper malesuada proin libero nunc consequat interdum varius. Turpis egestas pretium aenean pharetra magna ac placerat. Sed egestas egestas fringilla phasellus faucibus scelerisque eleifend donec. Sed cras ornare arcu dui. Aliquam vestibulum morbi blandit cursus. Adipiscing elit ut aliquam purus sit amet. Aenean sed adipiscing diam donec adipiscing tristique risus nec. Ut etiam sit amet nisl purus in mollis. Eu mi bibendum neque egestas congue quisque egestas diam in. Pellentesque adipiscing commodo elit at imperdiet dui accumsan sit.',
+            'image' => '7.jfif',
+            'price' => 100000,
+            'discount' => 15,
+            'selling' => 50,
+            'category_id' => 6,
+            'brand_id' => 6,
+            'width' => 6,
+            'height' => 6,
+            'length' => 6,
+            'weight' => 6
+        ]);
+        DB::table('product')->insert([
+            'name' =>'Kem chống nắng toàn thân ban đêm Mạnh Dũng 200g',
+            'description' => 'ffffffffffffffffff',
+            'content' => 'Ligula ullamcorper malesuada proin libero nunc consequat interdum varius. Turpis egestas pretium aenean pharetra magna ac placerat. Sed egestas egestas fringilla phasellus faucibus scelerisque eleifend donec. Sed cras ornare arcu dui. Aliquam vestibulum morbi blandit cursus. Adipiscing elit ut aliquam purus sit amet. Aenean sed adipiscing diam donec adipiscing tristique risus nec. Ut etiam sit amet nisl purus in mollis. Eu mi bibendum neque egestas congue quisque egestas diam in. Pellentesque adipiscing commodo elit at imperdiet dui accumsan sit.',
+            'image' => '8.jfif',
+            'price' => 100000,
+            'discount' => 15,
+            'selling' => 50,
+            'category_id' => 6,
+            'brand_id' => 6,
+            'width' => 6,
+            'height' => 6,
+            'length' => 6,
+            'weight' => 6
+        ]);
+        DB::table('product')->insert([
+            'name' =>'Kem chống nắng toàn thân ban đêm Mạnh Dũng 200g',
+            'description' => 'ffffffffffffffffff',
+            'content' => 'Ligula ullamcorper malesuada proin libero nunc consequat interdum varius. Turpis egestas pretium aenean pharetra magna ac placerat. Sed egestas egestas fringilla phasellus faucibus scelerisque eleifend donec. Sed cras ornare arcu dui. Aliquam vestibulum morbi blandit cursus. Adipiscing elit ut aliquam purus sit amet. Aenean sed adipiscing diam donec adipiscing tristique risus nec. Ut etiam sit amet nisl purus in mollis. Eu mi bibendum neque egestas congue quisque egestas diam in. Pellentesque adipiscing commodo elit at imperdiet dui accumsan sit.',
+            'image' => '9.jfif',
+            'price' => 100000,
+            'discount' => 15,
+            'selling' => 50,
+            'category_id' => 6,
+            'brand_id' => 6,
+            'width' => 6,
+            'height' => 6,
+            'length' => 6,
+            'weight' => 6
+        ]);
+        DB::table('product')->insert([
+            'name' =>'Kem chống nắng toàn thân ban đêm Mạnh Dũng 200g',
+            'description' => 'ffffffffffffffffff',
+            'content' => 'Ligula ullamcorper malesuada proin libero nunc consequat interdum varius. Turpis egestas pretium aenean pharetra magna ac placerat. Sed egestas egestas fringilla phasellus faucibus scelerisque eleifend donec. Sed cras ornare arcu dui. Aliquam vestibulum morbi blandit cursus. Adipiscing elit ut aliquam purus sit amet. Aenean sed adipiscing diam donec adipiscing tristique risus nec. Ut etiam sit amet nisl purus in mollis. Eu mi bibendum neque egestas congue quisque egestas diam in. Pellentesque adipiscing commodo elit at imperdiet dui accumsan sit.',
+            'image' => '10.jfif',
             'price' => 100000,
             'discount' => 15,
             'selling' => 50,
@@ -225,10 +177,10 @@ class DatabaseSeeder extends Seeder
 
         // data voucher
         DB::table('vouchers')->insert([
-            'code' =>'MANHDUNG01',
-            'image' => 'voucher01.png',
-            'name' => 'Giảm giá 5% cho tổng giá trị đơn hàng',
-            'description' => 'Giảm giá 5% cho tổng giá trị đơn hàng',
+            'code' =>'MANHDUNG03',
+            'image' => '3.png',
+            'name' => 'Giảm giá 3% cho tổng giá trị đơn hàng',
+            'description' => 'Giảm giá 3% cho tổng giá trị đơn hàng',
             'uses' => 5,
             'max_uses' => 50,
             'max_uses_user' => 2,
@@ -239,8 +191,8 @@ class DatabaseSeeder extends Seeder
             'expires_at' => '2022-03-24 00:00:00.000000'
         ]);
         DB::table('vouchers')->insert([
-            'code' =>'MANHDUNG02',
-            'image' => 'voucher02.png',
+            'code' =>'MANHDUNG10',
+            'image' => '10.png',
             'name' => 'Giảm giá 10% cho tổng giá trị đơn hàng',
             'description' => 'Giảm giá 10% cho tổng giá trị đơn hàng',
             'uses' => 5,
@@ -253,8 +205,8 @@ class DatabaseSeeder extends Seeder
             'expires_at' => '2022-03-24 00:00:00.000000'
         ]);
         DB::table('vouchers')->insert([
-            'code' =>'MANHDUNG03',
-            'image' => 'voucher03.png',
+            'code' =>'MANHDUNG15',
+            'image' => '15.png',
             'name' => 'Giảm giá 15% cho tổng giá trị đơn hàng',
             'description' => 'Giảm giá 15% cho tổng giá trị đơn hàng',
             'uses' => 5,
@@ -267,8 +219,8 @@ class DatabaseSeeder extends Seeder
             'expires_at' => '2022-03-24 00:00:00.000000'
         ]);
         DB::table('vouchers')->insert([
-            'code' =>'MANHDUNG04',
-            'image' => 'voucher04.png',
+            'code' =>'MANHDUNG20',
+            'image' => '20.png',
             'name' => 'Giảm giá 20% cho tổng giá trị đơn hàng',
             'description' => 'Giảm giá 20% cho tổng giá trị đơn hàng',
             'uses' => 5,
@@ -280,103 +232,33 @@ class DatabaseSeeder extends Seeder
             'starts_at' => '2022-02-24 00:00:00.000000',
             'expires_at' => '2022-03-24 00:00:00.000000'
         ]);
-
-        //data user
-        // DB::table('users')->insert([
-        //     'name' => 'admin',
-        //     'password' => Hash::make('12345'),
-        //     'image' => 'abc.png',
-        //     'phone' => '038632297',
-        //     'role' => 1,
-        //     'email' => 'admin1@gmail.com'
-        // ]);
-        // DB::table('users')->insert([
-        //     'name' => 'admin2',
-        //     'password' => Hash::make('12345'),
-        //     'image' => 'abc.png',
-        //     'phone' => '038632297',
-        //     'role' => 1,
-        //     'email' => 'admin2@gmail.com'
-        // ]);
-        // DB::table('users')->insert([
-        //     'name' => 'admin3',
-        //     'password' => Hash::make('12345'),
-        //     'image' => 'abc.png',
-        //     'phone' => '038632297',
-        //     'role' => 1,
-        //     'email' => 'admin3@gmail.com'
-        // ]);
-        // DB::table('users')->insert([
-        //     'name' => 'admin4',
-        //     'password' => Hash::make('12345'),
-        //     'image' => 'abc.png',
-        //     'phone' => '038632297',
-        //     'role' => 1,
-        //     'email' => 'admin4@gmail.com'
-        // ]);
-        // DB::table('users')->insert([
-        //     'name' => 'admin5',
-        //     'password' => Hash::make('12345'),
-        //     'image' => 'abc.png',
-        //     'phone' => '038632297',
-        //     'role' => 1,
-        //     'email' => 'admin5@gmail.com'
-        // ]);
-        // DB::table('users')->insert([
-        //     'name' => 'admin6',
-        //     'password' => Hash::make('12345'),
-        //     'image' => 'abc.png',
-        //     'phone' => '038632297',
-        //     'role' => 1,
-        //     'email' => 'admin6@gmail.com'
-        // ]);
-        // DB::table('users')->insert([
-        //     'name' => 'admin7',
-        //     'password' => Hash::make('12345'),
-        //     'image' => 'abc.png',
-        //     'phone' => '038632297',
-        //     'role' => 1,
-        //     'email' => 'admin7@gmail.com'
-        // ]);
-
-        //data user_voucher
-        DB::table('user_voucher')->insert([
-            'user_id' => 1,
-            'voucher_id' => 1,
+        DB::table('vouchers')->insert([
+            'code' =>'MANHDUNG25',
+            'image' => '25.png',
+            'name' => 'Giảm giá 25% cho tổng giá trị đơn hàng',
+            'description' => 'Giảm giá 25% cho tổng giá trị đơn hàng',
+            'uses' => 5,
+            'max_uses' => 50,
+            'max_uses_user' => 2,
+            'minimum_order' => 1000000,
+            'discount_amount' => 80000,
+            'percentage' => 20,
+            'starts_at' => '2022-02-24 00:00:00.000000',
+            'expires_at' => '2022-03-24 00:00:00.000000'
         ]);
-        DB::table('user_voucher')->insert([
-            'user_id' => 1,
-            'voucher_id' => 1,
-        ]);
-
-        //data user_voucher
-        DB::table('warehouse')->insert([
-            'product_id' => 1,
-            'quantity' => 100,
-        ]);
-        DB::table('warehouse')->insert([
-            'product_id' => 2,
-            'quantity' => 10,
-        ]);
-        DB::table('warehouse')->insert([
-            'product_id' => 3,
-            'quantity' => 10,
-        ]);
-        DB::table('warehouse')->insert([
-            'product_id' => 4,
-            'quantity' => 10,
-        ]);
-        DB::table('warehouse')->insert([
-            'product_id' => 5,
-            'quantity' => 10,
-        ]);
-        DB::table('warehouse')->insert([
-            'product_id' => 6,
-            'quantity' => 10,
-        ]);
-        DB::table('warehouse')->insert([
-            'product_id' => 7,
-            'quantity' => 10,
+        DB::table('vouchers')->insert([
+            'code' =>'MANHDUNG03',
+            'image' => '3.png',
+            'name' => 'Giảm giá 3% cho tổng giá trị đơn hàng',
+            'description' => 'Giảm giá 3% cho tổng giá trị đơn hàng',
+            'uses' => 5,
+            'max_uses' => 50,
+            'max_uses_user' => 2,
+            'minimum_order' => 1000000,
+            'discount_amount' => 80000,
+            'percentage' => 20,
+            'starts_at' => '2022-02-24 00:00:00.000000',
+            'expires_at' => '2022-03-24 00:00:00.000000'
         ]);
     }
 }
