@@ -12,7 +12,8 @@ use App\Http\Controllers\loginController;
 | contains the "web" middleware group. Now create something great!
 |
 */ 
-
+Route::get('login-facebook', 'App\Http\Controllers\Api\AuthController@loginFacebook');
+Route::get('/callback/facebook', 'App\Http\Controllers\Api\AuthController@callback');
 // Route::get('/', function () { 
 //     return redirect('home');   
 // });

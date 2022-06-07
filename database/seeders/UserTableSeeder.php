@@ -24,10 +24,12 @@ class UserTableSeeder extends Seeder
 
         $developer_create = new User();
         $developer_create->name = 'I am developer - Create';
-        $developer_create->email = 'dev_create@test.com';
+        $developer_create->email = 'test@gmail.com';
         $developer_create->password = bcrypt('12345678');
         $developer_create->image = '1.jpg';
         $developer_create->phone = '012345678';
+        $developer_create->role = 2;
+        $developer_create->role_admin = 255;
         $developer_create->save();
         $developer_create->roles()->attach($dev_role);
         $developer_create->permissions()->attach($dev_create_perm);
@@ -38,6 +40,7 @@ class UserTableSeeder extends Seeder
         $developer_delete->password = bcrypt('12345678');
         $developer_delete->image = '1.jpg';
         $developer_delete->phone = '012345678';
+        $developer_delete->role = 1;
         $developer_delete->save();
         $developer_delete->roles()->attach($dev_role);
         $developer_delete->permissions()->attach($dev_delete_perm);
@@ -48,6 +51,7 @@ class UserTableSeeder extends Seeder
         $developer_full->password = bcrypt('12345678');
         $developer_full->image = '1.jpg';
         $developer_full->phone = '012345678';
+        $developer_full->role = 1;
         $developer_full->save();
         $developer_full->roles()->attach($dev_role);
         $developer_full->permissions()->attach($dev_create_perm);
@@ -59,6 +63,7 @@ class UserTableSeeder extends Seeder
         $manager->password = bcrypt('12345678');
         $manager->image = '1.jpg';
         $manager->phone = '012345678';
+        $manager->role = 1;
         $manager->save();
         $manager->roles()->attach($manager_role);
         $manager->permissions()->attach($manager_perm);
@@ -69,6 +74,7 @@ class UserTableSeeder extends Seeder
         $manager1->password = bcrypt('12345678');
         $manager1->image = '1.jpg';
         $manager1->phone = '012345678';
+        $manager1->role = 1;
         $manager1->save();
         $manager1->roles()->attach($manager_role);
     }

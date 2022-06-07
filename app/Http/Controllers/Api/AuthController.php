@@ -14,6 +14,7 @@ use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\File;
 use Storage;
+use Socialite;
 
 class AuthController extends Controller
 {
@@ -103,5 +104,21 @@ class AuthController extends Controller
         return response([
             'status' => 'success'
         ]);
+    }
+
+    public function loginFacebook() {
+        $facebook = Socialite::driver('facebook')->redirect()->getTargetUrl();
+        return $this->responseSuccess($facebook);
+    }
+
+    public function callback()
+    {
+        // dd(Socialite::driver('facebook')->stateless()->user());
+        // $getInfo = Socialite::driver('facebook')->stateless()->user(); 
+        // // \Log::info($getInfo);
+        // $user = $this->createUser($getInfo,'facebook'); 
+        // auth()->login($user); 
+        // return redirect()->to('/home');
+        return redirect()->away(env('FONTEND_URL'));
     }
 }

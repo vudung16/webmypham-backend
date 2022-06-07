@@ -32,8 +32,12 @@ Route::post('category-product', 'App\Http\Controllers\Api\WebviewController@cate
 Route::post('rating', 'App\Http\Controllers\Api\WebviewController@rating')->name('api.home.rating');
 Route::post('comment', 'App\Http\Controllers\Api\WebviewController@comment')->name('api.comment');
 Route::post('info-order', 'App\Http\Controllers\Api\WebviewController@infoOrder')->name('api.infoOrder');
-// Route::post('dashboard', 'App\Http\Controllers\Admin\DashBoardController@dashboard')->name('api.dashboard');
 
+Route::post('reset-password', 'App\Http\Controllers\Api\ResetPasswordController@sendMail');
+Route::post('reset', 'App\Http\Controllers\Api\ResetPasswordController@reset');
+Route::get('testt',function(){
+    return view('mail');
+  });
 
 //Login
 Route::post('auth/login', 'App\Http\Controllers\Api\AuthController@login');
