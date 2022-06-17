@@ -454,7 +454,7 @@ class WebviewController extends Controller
                         return $query->where('name', 'like', "%$search%");
                     })
                     ->when(isset($category), function ($query) use ($category) {
-                        return $query->where('category_id', 'like', "%$category%");
+                        return $query->where('category_id', $category);
                     })
                     ->whereBetween('price', [$request->total[0],$request->total[1]])
                     ->whereIn('brand_id', $request->brand)
