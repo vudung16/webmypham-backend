@@ -26,6 +26,7 @@ Route::get('brand', 'App\Http\Controllers\Api\WebviewController@brand')->name('a
 // Route::post('add-to-cart', 'App\Http\Controllers\Api\WebviewController@addToCart')->name('api.home.addtocart');
 Route::post('payment', 'App\Http\Controllers\Api\WebviewController@payment')->name('api.home.payment');
 Route::get('return-vnpay', 'App\Http\Controllers\Api\WebviewController@returnVnpay')->name('api.home.returnvnpay');
+Route::get('return-momo', 'App\Http\Controllers\Api\WebviewController@returnMomo')->name('api.home.returnMomo');
 Route::get('list-voucher', 'App\Http\Controllers\Api\WebviewController@listVoucher')->name('api.home.listvoucher');
 Route::post('check-voucher', 'App\Http\Controllers\Api\WebviewController@checkVoucher')->name('api.home.checkvoucher');
 Route::post('category-product', 'App\Http\Controllers\Api\WebviewController@categoryProduct')->name('api.home.categoryproduct');

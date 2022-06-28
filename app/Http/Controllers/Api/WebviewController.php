@@ -334,6 +334,41 @@ class WebviewController extends Controller
 
             return $this->responseSuccess(['success' => 'Đặt hàng thành công']);
         }
+
+        if ($request->type === 'momo') {
+            $endpoint = "https://test-payment.momo.vn/v2/gateway/api/create";
+            $partnerCode = 'MOMOBKUN20180529';
+            $accessKey = 'klm05TvNBzhg7h7j';
+            $secretKey = 'at67qH6mk8w5Y1nAyMoYKMWACiEi2bsa';
+            $orderInfo = "Thanh toán qua MoMo";
+            $amount = $request->total;
+            $orderId = time() ."";
+            $redirectUrl = env('APP_URL'). "/api/return-momo";
+            $ipnUrl = env('APP_URL'). "/api/return-momo";
+            $extraData = serialize(json_encode($request->all()));
+            
+            $requestId = time() . "";
+            $requestType = "payWithATM";
+            //before sign HMAC SHA256 signature
+            $rawHash = "accessKey=" . $accessKey . "&amount=" . $amount . "&extraData=" . $extraData . "&ipnUrl=" . $ipnUrl . "&orderId=" . $orderId . "&orderInfo=" . $orderInfo . "&partnerCode=" . $partnerCode . "&redirectUrl=" . $redirectUrl . "&requestId=" . $requestId . "&requestType=" . $requestType;
+            $signature = hash_hmac("sha256", $rawHash, $secretKey);
+            $data = array('partnerCode' => $partnerCode,
+                'partnerName' => "Notro.vn",
+                "storeId" => "Noitro.vn",
+                'requestId' => $requestId,
+                'amount' => $amount,
+                'orderId' => $orderId,
+                'orderInfo' => $orderInfo,
+                'redirectUrl' => $redirectUrl,
+                'ipnUrl' => $ipnUrl,
+                'lang' => 'vi',
+                'extraData' => $extraData,
+                'requestType' => $requestType,
+                'signature' => $signature);
+            $result = $this->execPostRequest($endpoint, json_encode($data));
+            $jsonResult = json_decode($result, true);  // decode json
+            return $this->responseSuccess($jsonResult['payUrl']);
+        }
     }
 
     public function returnVnpay(Request $request)
@@ -343,6 +378,16 @@ class WebviewController extends Controller
             return view('payment', ['payment' => $request->all()]);
         }
         // return redirect($url)->with('errors' ,'Lỗi trong quá trình thanh toán phí dịch vụ');
+    }
+
+    public function returnMomo(Request $request)
+    {
+        \Log::info($request->all());
+        if($request) {
+            $request->extraData = unserialize($request->extraData);
+            // $this->saveOrder($request->extraData, 'gate');
+            return view('momo', ['payment' => $request->extraData]);
+        }
     }
 
     public function listVoucher() {
@@ -735,5 +780,24 @@ class WebviewController extends Controller
         $rate->user_id = $request->user_id;
         $rate->save();
         return $this->responseSuccess();
+    }
+
+    function execPostRequest($url, $data)
+    {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+                'Content-Length: ' . strlen($data))
+        );
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+        //execute post
+        $result = curl_exec($ch);
+        //close connection
+        curl_close($ch);
+        return $result;
     }
 }
