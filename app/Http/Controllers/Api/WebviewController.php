@@ -374,7 +374,7 @@ class WebviewController extends Controller
     public function returnVnpay(Request $request)
     {   
         if($request->vnp_ResponseCode == "00") {
-            // $this->saveOrder($request->vnp_OrderInfo, 'gate');
+            $this->saveOrder($request->vnp_OrderInfo, 'gate');
             return view('payment', ['payment' => $request->all()]);
         }
         // return redirect($url)->with('errors' ,'Lỗi trong quá trình thanh toán phí dịch vụ');
@@ -382,10 +382,9 @@ class WebviewController extends Controller
 
     public function returnMomo(Request $request)
     {
-        \Log::info($request->all());
         if($request) {
             $request->extraData = unserialize($request->extraData);
-            // $this->saveOrder($request->extraData, 'gate');
+            $this->saveOrder($request->extraData, 'gate');
             return view('momo', ['payment' => $request->extraData]);
         }
     }

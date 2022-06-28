@@ -113,12 +113,12 @@ class AuthController extends Controller
 
     public function callback()
     {
-        // dd(Socialite::driver('facebook')->stateless()->user());
+        dd(Socialite::driver('facebook')->stateless()->user());
         // $getInfo = Socialite::driver('facebook')->stateless()->user(); 
-        // // \Log::info($getInfo);
+        // \Log::info($getInfo);
         // $user = $this->createUser($getInfo,'facebook'); 
         // auth()->login($user); 
         // return redirect()->to('/home');
-        return redirect()->away(env('FONTEND_URL'));
+        // return redirect()->away(env('FONTEND_URL'));
     }
 }
