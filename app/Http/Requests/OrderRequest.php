@@ -27,8 +27,8 @@ class OrderRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'phone' => 'required',
-            'email' => 'required',
+            'phone' => ['required','regex:/^(0[3|5|7|8|9])[0-9]{8}+$/'],
+            'email' => 'required|email:rfc,dns',
             'province' => 'required',
             'district' => 'required',
             'ward' => 'required'
@@ -40,7 +40,9 @@ class OrderRequest extends FormRequest
         return [
             'name.required' => 'Bạn chưa nhập Họ Tên',
             'phone.required' => 'Bạn chưa nhập Số điện thoại',
+            'phone.regex' => 'Số điện thoại chưa đúng định dạng',
             'email.required' => 'Bạn chưa nhập Email',
+            'email.email' => 'Email chưa đúng định dạng',
             'province.required' => 'Bạn chưa chọn Tỉnh/Thành Phố',
             'district.required' => 'Bạn chưa chọn Quận/Huyện',
             'ward.required' => 'Bạn chưa chọn Phường/Xã'
