@@ -113,12 +113,30 @@ class AuthController extends Controller
 
     public function callback()
     {
-        dd(Socialite::driver('facebook')->stateless()->user());
-        // $getInfo = Socialite::driver('facebook')->stateless()->user(); 
-        // \Log::info($getInfo);
-        // $user = $this->createUser($getInfo,'facebook'); 
-        // auth()->login($user); 
-        // return redirect()->to('/home');
-        // return redirect()->away(env('FONTEND_URL'));
+        $getInfo = Socialite::driver('facebook')->stateless()->user();
+        $user = User::where('facebook_id', $getInfo->id)->first();
+        $token = '';
+        if (!$user) {
+            $createUser = User::create([
+                'name' => $getInfo->name,
+                'email' => $getInfo->email ? $getInfo->email : '',
+                'image' => $getInfo->avatar,
+                'phone' => '',
+                'facebook_id' => $getInfo->id,
+                'role' => 1,
+                'role_admin' => null,
+                'password' => Hash::make(rand(1,10000)),
+            ]);
+            $user = $createUser;
+            $token = $this->checkLoginFacebook($createUser);
+        } else {
+            $token = $this->checkLoginFacebook($user);
+        }
+        return redirect()->away(env('FRONTEND_URL') . 'login-facebook?token=' . $token . '&role=' . $user->role . '&user_id=' . $user->user_id);
+    }
+
+    public function checkLoginFacebook($user) {
+        $token = JWTAuth::fromUser($user);
+        return $token;
     }
 }
